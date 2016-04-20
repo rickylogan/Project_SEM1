@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_NSX" value="name:NSX;datatype:varchar,name:MaNSX;datatype:int" />
+	<infoitem key="UD_LoaiSP" value="name:MaLoai;datatype:int,name:Loai;datatype:varchar" />
+</info>

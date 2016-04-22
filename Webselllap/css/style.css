@@ -1162,8 +1162,9 @@ p.m_11{
 }
 /*--portfolio--*/
 .item{
-	height:240px;
-	width: 240px;
+	width: 300px;
+	height: 250px;
+	margin: 20px 40px 0 30px;
 }
 /*--contact--*/
 form div {

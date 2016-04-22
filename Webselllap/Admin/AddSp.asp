@@ -98,17 +98,12 @@ LoaiSP_numRows = 0
 <title>Quản trị viên :: Groupfour</title>
 <link rel="shortcut icon" href="../images/icon.png">
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet">
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/normalize.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/animate.css">
-    <link rel="stylesheet" href="css/templatemo_misc.css">
     <link rel="stylesheet" href="css/templatemo_style.css">
     <script src="js/vendor/modernizr-2.6.2.min.js"></script>
 <script src="../js/jquery.min.js"></script>
@@ -125,7 +120,7 @@ LoaiSP_numRows = 0
 if Session("name") = "" then
 	Response.Redirect("loginAD.asp")
 else
-	Response.write("Xin chào, <b class=tentk>" & Session("name") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2 <ins>Thoát<ins></a>")
+	Response.write("Xin chào, <b class=tentk>" & Session("name") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2><ins>Thoát</ins></a>")
 	
 end if
 %>
@@ -136,7 +131,7 @@ end if
 </div> <!-- /#front -->
 <div class="site-slider"></div>
 <div class="clear"></div>
-<h1 style="color:#0CF" size="300%" align="center">Thêm Sản Phẩm</h1>
+<h1 style="color:rgb(0, 66, 255)" size="300%" align="center">THÊM SẢN PHẨM</h1>
     <div class="item">
     <form ACTION="<%=editAction%>" onsubmit="return ProgressBar()" method="post" enctype="multipart/form-data" name="form1" id="form1">
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -204,19 +199,14 @@ End If
         </tr>
         <tr>
           <td><p>Giá</p></td>
-			<td>
-                <label for="txtGia">
-                <input type="text" name="txtGia" id="txtGia">
-                </label>
-			</td>
+			<td><label for="txtGia"></label>
+		    <input type="text" name="txtGia" id="txtGia">			  
+		    <em> <u>VNĐ</u></em></td>
         </tr>
         <tr>
 		<td><p>Ghi chú</p></td>
-		<td>
-        	<label for="txtGhiChu">
-          	<input type="text" name="txtGhiChu" id="txtGhiChu">
-            </label>
-		</td>
+		<td><label for="txtGhiChu"></label>
+		  <input type="text" name="txtGhiChu" id="txtGhiChu"></td>
         </tr>
         <tr>
         <td align="right">
@@ -239,7 +229,7 @@ End If
 <div class="footer-bar">
     <span class="article-wrapper">
         <span class="article-label">Trang quản lý</span>
-        <span class="article-link"><a href="#">Lên top</a></span>
+        <span class="article-link"><a href="#">Lên <ins>TOP▲</ins></a></span>
     </span>
 </div>
 </body>

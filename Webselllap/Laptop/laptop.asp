@@ -75,8 +75,8 @@ Dim MM_index
 Set MM_rs    = LAPTOP
 MM_rsCount   = LAPTOP_total
 MM_size      = LAPTOP_numRows
-MM_uniqueCol = ""
-MM_paramName = ""
+MM_uniqueCol = "MaSP"
+MM_paramName = "id1"
 MM_offset = 0
 MM_atTotal = false
 MM_paramIsDefined = false
@@ -117,6 +117,45 @@ if (Not MM_paramIsDefined And MM_rsCount <> 0) then
   Wend
   If (MM_rs.EOF) Then 
     MM_offset = MM_index  ' set MM_offset to the last possible record
+  End If
+
+End If
+%>
+<%
+' *** Move To Specific Record: handle detail parameter
+
+If (MM_paramIsDefined And MM_rsCount <> 0) Then
+
+  ' get the value of the parameter
+  MM_param = Request.QueryString(MM_paramName)
+
+  ' find the record with the unique column value equal to the parameter value
+  MM_offset = 0
+  Do While (Not MM_rs.EOF)
+    If (CStr(MM_rs.Fields.Item(MM_uniqueCol).Value) = MM_param) Then
+      Exit Do
+    End If
+    MM_offset = MM_offset + 1
+    MM_rs.MoveNext
+  Loop
+
+  ' if not found, set the number of records and reset the cursor
+  If (MM_rs.EOF) Then
+    If (MM_rsCount < 0) Then
+      MM_rsCount = MM_offset
+    End If
+    If (MM_size < 0 Or MM_size > MM_offset) Then
+      MM_size = MM_offset
+    End If
+    MM_offset = 0
+
+    ' reset the cursor to the beginning
+    If (MM_rs.CursorType > 0) Then
+      MM_rs.MoveFirst
+    Else
+      MM_rs.Close
+      MM_rs.Open
+    End If
   End If
 
 End If
@@ -559,7 +598,7 @@ Wend
 		   </div>
 	   </div>
 		   <div class="clear"></div>
-		   <p>&nbsp;<A HREF="<%=MM_moveFirst%>">&lt;&lt;Trang đầu </A><A HREF="<%=MM_movePrev%>">&lt;&lt;Trước </A>**** <A HREF="<%=MM_moveNext%>">Tiếp&gt;&gt;</A> <A HREF="<%=MM_moveLast%>">Trang cuối&gt;&gt;</A></p>
+		   <p>&nbsp;<A HREF="<%=MM_moveFirst%>">&lt;&lt;Trang đầu </A><A HREF="<%=MM_movePrev%>">&lt;&lt;Trước </A>**1** <A HREF="<%=MM_moveNext%>">Tiếp&gt;&gt;</A> <A HREF="<%=MM_moveLast%>">Trang cuối&gt;&gt;</A></p>
 </div>
 <!---------------------------
                 BOTTOM

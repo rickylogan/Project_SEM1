@@ -12,16 +12,27 @@ Dim MM_abortEdit
 MM_abortEdit = false
 %>
 <%
-' *** Delete Record: construct a sql delete statement and execute it
-
-If (CStr(Request("MM_delete")) = "form1" And CStr(Request("MM_recordId")) <> "") Then
-
+' IIf implementation
+Function MM_IIf(condition, ifTrue, ifFalse)
+  If condition = "" Then
+    MM_IIf = ifFalse
+  Else
+    MM_IIf = ifTrue
+  End If
+End Function
+%>
+<%
+If (CStr(Request("MM_update")) = "form1") Then
   If (Not MM_abortEdit) Then
-    ' execute the delete
+    ' execute the update
+    Dim MM_editCmd
+
     Set MM_editCmd = Server.CreateObject ("ADODB.Command")
     MM_editCmd.ActiveConnection = MM_Connection_STRING
-    MM_editCmd.CommandText = "DELETE FROM dbo.SanPham WHERE MaSP = ?"
-    MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param1", 5, 1, -1, Request.Form("MM_recordId")) ' adDouble
+    MM_editCmd.CommandText = "UPDATE dbo.SanPham SET Tinhtrang = ? WHERE MaSP = ?" 
+    MM_editCmd.Prepared = true
+    MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param1", 5, 1, -1, MM_IIF(Request.Form("Xoa"), Request.Form("Xoa"), null)) ' adDouble
+    MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param2", 5, 1, -1, MM_IIF(Request.Form("MM_recordId"), Request.Form("MM_recordId"), null)) ' adDouble
     MM_editCmd.Execute
     MM_editCmd.ActiveConnection.Close
 
@@ -37,7 +48,6 @@ If (CStr(Request("MM_delete")) = "form1" And CStr(Request("MM_recordId")) <> "")
     End If
     Response.Redirect(MM_editRedirectUrl)
   End If
-
 End If
 %>
 <%
@@ -54,7 +64,7 @@ Dim SanPham_numRows
 
 Set SanPham_cmd = Server.CreateObject ("ADODB.Command")
 SanPham_cmd.ActiveConnection = MM_Connection_STRING
-SanPham_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE MaSP = ?" 
+SanPham_cmd.CommandText = "SELECT a.MaSP, a.TenSP, a.MaNSX, a.MaLoai, a.HinhAnh, a.Gia, a.Tinhtrang, a.SoLuong,a.CauHinh, b.Loai, c.NSX FROM dbo.SanPham a, dbo.LoaiSP b, dbo.NSX c WHERE MaSP = ? and a.Tinhtrang=1 and a.MaLoai=b.MaLoai and a.MaNSX=c.MaNSX ORDER BY MaSP DESC" 
 SanPham_cmd.Prepared = true
 SanPham_cmd.Parameters.Append SanPham_cmd.CreateParameter("param1", 5, 1, -1, SanPham__MMColParam) ' adDouble
 
@@ -70,12 +80,8 @@ SanPham_numRows = 0
     <meta name="viewport" content="width=device-width">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/normalize.min.css">
-    <link rel="stylesheet" href="css/animate.css">
-    <link rel="stylesheet" href="css/templatemo_misc.css">
     <link rel="stylesheet" href="css/templatemo_style.css">
  <script src="../js/jquery.min.js"></script>
 </head>
@@ -90,7 +96,7 @@ SanPham_numRows = 0
 if Session("name") = "" then
 	Response.Redirect("loginAD.asp")
 else
-	Response.write("Xin chào, <b class=tentk>" & Session("name") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2 <ins>Thoát<ins></a>")
+	Response.write("Xin chào, <b class=tentk>" & Session("name") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2><ins>Thoát</ins></a>")
 	
 end if
 %>
@@ -101,26 +107,26 @@ end if
 </div> <!-- /#front -->
 <div class="site-slider"></div>
 <div class="clear"></div>
-<h1 style="color:#0CF" size="300%" align="center">Xóa Sản Phẩm</h1>
+<h1 style="color:rgb(0, 66, 255)" size="300%" align="center">Xóa sản phẩm</h1>
 <div class="product-item">
-  <table width="60%" border="0" cellspacing="0" cellpadding="0">
+  <table align="center" width="50%" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td width="20%"></td>
       <td width="5%"><img src="<%=(SanPham.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"></td>
-      <td width="20%"><p><%=(SanPham.Fields.Item("TenSP").Value)%></p>
-        <p>Loại <%=(SanPham.Fields.Item("MaLoai").Value)%></p>
-        <p>NSX <%=(SanPham.Fields.Item("MaNSX").Value)%></p>
-        <p>Cấu hình<%=(SanPham.Fields.Item("CauHinh").Value)%></p>
-        <p>NSX <%=(SanPham.Fields.Item("SoLuong").Value)%></p></td>
+      <td width="25%"><p>- <%=(SanPham.Fields.Item("TenSP").Value)%></p>
+        <p>- Loại <%=(SanPham.Fields.Item("Loai").Value)%></p>
+        <p>- Hãng <%=(SanPham.Fields.Item("NSX").Value)%></p>
+        <p>- Cấu hình <%=(SanPham.Fields.Item("CauHinh").Value)%></p>
+        <p>- Số lượng <%=(SanPham.Fields.Item("SoLuong").Value)%></p></td>
       <td width="5%"><p>&nbsp;</p>
-		<form name="form1" method="POST" action="<%=MM_editAction%>">
-          <input type="submit" name="button" id="button" value="XÓA">
-          <input type="hidden" name="MM_delete" value="form1">
+		<form ACTION="<%=MM_editAction%>" METHOD="POST" name="form1">
+          <button type="submit" name="button" id="button" value="XÓA">XÓA</button>
+          <input name="Xoa" type="hidden" id="Xoa" value="0">
+          <input type="hidden" name="MM_update" value="form1">
           <input type="hidden" name="MM_recordId" value="<%= SanPham.Fields.Item("MaSP").Value %>">
         </form>
         </p>
         <form name="form2" method="post" action="Products.asp">
-          <input type="submit" name="button2" id="button2" value="HỦY">
+          <Button type="submit" name="button2" id="button2" value="HỦY">HỦY</button>
         </form>
         <p>&nbsp;</p></td>
     </tr>
@@ -133,7 +139,7 @@ end if
 <div class="footer-bar">
     <span class="article-wrapper">
         <span class="article-label">Trang quản lý</span>
-        <span class="article-link"><a href="#top">Lên top</a></span>
+        <span class="article-link"><a href="#">Lên <ins>TOP▲</ins></a></span>
     </span>
 </div>
 </body>

@@ -23,7 +23,7 @@
 if Session("name") = "" then
 	Response.write("<a rel=nofollow href=loginAD.asp?loginAD=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=loginAD.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
 else
-	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=loginAD.asp class=colorlink2 <ins>Thoát<ins></a>")
+	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=loginAD.asp class=colorlink2><ins>Thoát<ins></a>")
 	
 end if
 %>

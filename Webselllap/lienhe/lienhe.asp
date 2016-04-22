@@ -1,4 +1,82 @@
-﻿<%@LANGUAGE="VBSCRIPT" %> 
+﻿<%@LANGUAGE="VBSCRIPT" %>
+<!--#include file="../Connections/Connection.asp" -->
+<%
+Dim MM_editAction
+MM_editAction = CStr(Request.ServerVariables("SCRIPT_NAME"))
+If (Request.QueryString <> "") Then
+  MM_editAction = MM_editAction & "?" & Server.HTMLEncode(Request.QueryString)
+End If
+
+' boolean to abort record edit
+Dim MM_abortEdit
+MM_abortEdit = false
+%>
+<%
+If (CStr(Request("MM_insert")) = "form1") Then
+  If (Not MM_abortEdit) Then
+    ' execute the insert
+    Dim MM_editCmd
+
+    Set MM_editCmd = Server.CreateObject ("ADODB.Command")
+    MM_editCmd.ActiveConnection = MM_Connection_STRING
+    MM_editCmd.CommandText = "INSERT INTO dbo.YKKH (TenKH, Email, DC, SDT, NoiDung) VALUES (?, ?, ?, ?, ?)" 
+    MM_editCmd.Prepared = true
+    MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param1", 201, 1, 50, Request.Form("txtTenKH")) ' adLongVarChar
+    MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param2", 201, 1, 50, Request.Form("txtEmail")) ' adLongVarChar
+    MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param3", 202, 1, 100, Request.Form("txtDC")) ' adVarWChar
+    MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param4", 201, 1, 50, Request.Form("txtSDT")) ' adLongVarChar
+    MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param5", 202, 1, 4000, Request.Form("txtContent")) ' adVarWChar
+    MM_editCmd.Execute
+    MM_editCmd.ActiveConnection.Close
+
+    ' append the query string to the redirect URL
+    Dim MM_editRedirectUrl
+    MM_editRedirectUrl = "../index.asp"
+    If (Request.QueryString <> "") Then
+      If (InStr(1, MM_editRedirectUrl, "?", vbTextCompare) = 0) Then
+        MM_editRedirectUrl = MM_editRedirectUrl & "?" & Request.QueryString
+      Else
+        MM_editRedirectUrl = MM_editRedirectUrl & "&" & Request.QueryString
+      End If
+    End If
+    Response.Redirect(MM_editRedirectUrl)
+  End If
+End If
+%>
+<%
+Dim YKKH
+Dim YKKH_cmd
+Dim YKKH_numRows
+
+Set YKKH_cmd = Server.CreateObject ("ADODB.Command")
+YKKH_cmd.ActiveConnection = MM_Connection_STRING
+YKKH_cmd.CommandText = "SELECT * FROM dbo.YKKH" 
+YKKH_cmd.Prepared = true
+
+Set YKKH = YKKH_cmd.Execute
+YKKH_numRows = 0
+%>
+<%
+Dim KH__MMColParam
+KH__MMColParam = "1"
+If (Session("TKKH") <> "") Then 
+  KH__MMColParam = Session("TKKH")
+End If
+%>
+<%
+Dim KH
+Dim KH_cmd
+Dim KH_numRows
+
+Set KH_cmd = Server.CreateObject ("ADODB.Command")
+KH_cmd.ActiveConnection = MM_Connection_STRING
+KH_cmd.CommandText = "SELECT TKKH, TenKH, DiaChi, Email, SDT FROM dbo.KhachHang WHERE TKKH = ?" 
+KH_cmd.Prepared = true
+KH_cmd.Parameters.Append KH_cmd.CreateParameter("param1", 200, 1, 50, KH__MMColParam) ' adVarChar
+
+Set KH = KH_cmd.Execute
+KH_numRows = 0
+%>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -198,22 +276,23 @@ end if
 	          <div class="m_contact"><span class="left_line1"> </span>Liên hệ<span class="right_line1"> </span></div>
               <p class="m_12">Để được tư vấn, giải đáp thắc mắc về các sản phẩm, Quý khách hàng hãy liên hệ với chúng tôi ở Văn phòng Group4 tại TP.Hồ Chí Minh.</p>
               <div class="contatct-top">
-               <form method="post" action="contact-post.asp">
-					<div class="to">
-                     	<input type="text" class="text" value="Tên" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Tên';}">
-					 	<input type="text" class="text" value="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" style="margin-left: 10px">
-					</div>
-					<div class="to">
-                     	<input type="text" class="text" value="Địa chỉ" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Địa chỉ';}">
-					 	<input type="text" class="text" value="Số điện thoại" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Số điện thoại';}" style="margin-left: 10px">
-					</div>
-					<div class="text">
-	                   <textarea value="Lời nhắn..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Lời nhắn...';}">Lời nhắn...</textarea>
-	                </div>
-	                <div>
-	               		<input type="submit" value="Gửi">
-	                </div>
-               </form>
+<%
+	Content = ""
+	if Session("TKKH") = "" then
+	Content = Content & "<form name=form1 action=" & MM_editAction & "method=POST id=form1>"
+	Content = Content & "<div class=to><input name=txtTenKH type=text class=text id=txtTenKH placeholder=Tên><input name=txtEmail type=text class=text id=txtEmail style=margin-left:10px placeholder=Email></div>"
+	Content = Content & "<div class=to><input name=txtDC type=text class=text id=txtDC placeholder='Địa chỉ'><input name=txtSDT type=text class=text id=txtSDT style=margin-left:10px placeholder='Số điện thoại'></div>"
+	Content = Content & "<div class=text><textarea name=txtContent id=txtContent placeholder='Lời nhắn...'></textarea></div>"
+	Content = Content & "<div><input type=submit value=Gửi></div><input type=hidden name=" & MM_insert & " value=form1></form>"
+	else
+		Content = Content & "<form name=form1 action="& MM_editAction& " method=POST id=form1>"
+		Content = Content & "<div class=to><input name=txtTenKH type=text class=text id=txtTenKH value='" & (KH.Fields.Item("TenKH").Value) & "'><input name=txtEmail type=text class=text id=txtEmail style=margin-left:10px value=" & KH.Fields.Item("Email").Value & "></div>"
+		Content = Content & "<div class=to><input name=txtDC type=text class=text id=txtDC value=" & KH.Fields.Item("DiaChi").Value& "><input name=txtSDT type=text class=text id=txtSDT style=margin-left:10px value=" & KH.Fields.Item("SDT").Value & "></div>"
+		Content = Content & "<div class=text><textarea name=txtContent id=txtContent value='Lời nhắn...'></textarea></div>"
+		Content = Content & "<div><input type=submit value=Gửi></div><input type=hidden name=MM_insert value=form1></form>"
+	end if
+	Response.Write(Content)
+%>
                <div class="map">
 			     <iframe src="https://www.google.com/maps/d/embed?mid=z1j46M5Vtics.kKEfvly1qvlw" width="100%" height="480"></iframe>
                    <small><a href="https://www.google.com/maps/d/embed?mid=z1j46M5Vtics.kKEfvly1qvlw" style="color:#666;text-align:left;font-size:12px">Xem trên Google Map</a></small>
@@ -310,3 +389,11 @@ end if
        
 </body>
 </html>
+<%
+YKKH.Close()
+Set YKKH = Nothing
+%>
+<%
+KH.Close()
+Set KH = Nothing
+%>

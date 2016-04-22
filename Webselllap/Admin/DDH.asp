@@ -1,69 +1,107 @@
-<%@LANGUAGE="VBSCRIPT"  CODEPAGE="65001"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <!--#include file="../Connections/Connection.asp" -->
 <%
-Dim SanPham
-Dim SanPham_cmd
-Dim SanPham_numRows
+Dim MM_editAction
+MM_editAction = CStr(Request.ServerVariables("SCRIPT_NAME"))
+If (Request.QueryString <> "") Then
+  MM_editAction = MM_editAction & "?" & Server.HTMLEncode(Request.QueryString)
+End If
 
-Set SanPham_cmd = Server.CreateObject ("ADODB.Command")
-SanPham_cmd.ActiveConnection = MM_Connection_STRING
-SanPham_cmd.CommandText = "SELECT a.MaSP, a.TenSP, a.MaNSX, a.MaLoai, a.HinhAnh, a.Gia, a.Tinhtrang, a.SoLuong, b.Loai, c.NSX FROM dbo.SanPham a, dbo.LoaiSP b, dbo.NSX c WHERE a.Tinhtrang=1 and a.MaLoai=b.MaLoai and a.MaNSX=c.MaNSX ORDER BY MaSP DESC" 
-SanPham_cmd.Prepared = true
+' boolean to abort record edit
+Dim MM_abortEdit
+MM_abortEdit = false
+%>
+<%
+' IIf implementation
+Function MM_IIf(condition, ifTrue, ifFalse)
+  If condition = "" Then
+    MM_IIf = ifFalse
+  Else
+    MM_IIf = ifTrue
+  End If
+End Function
+%>
+<%
+If (CStr(Request("MM_update")) = "form2") Then
+  If (Not MM_abortEdit) Then
+    ' execute the update
+    Dim MM_editCmd
 
-Set SanPham = SanPham_cmd.Execute
-SanPham_numRows = 0
+    Set MM_editCmd = Server.CreateObject ("ADODB.Command")
+    MM_editCmd.ActiveConnection = MM_Connection_STRING
+    MM_editCmd.CommandText = "UPDATE dbo.DonDatHang SET TinhTrang = ? WHERE MaDDH = ?" 
+    MM_editCmd.Prepared = true
+    MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param1", 202, 1, 20, Request.Form("TinhTrang")) ' adVarWChar
+    MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param2", 5, 1, -1, MM_IIF(Request.Form("MM_recordId"), Request.Form("MM_recordId"), null)) ' adDouble
+    MM_editCmd.Execute
+    MM_editCmd.ActiveConnection.Close
+
+    ' append the query string to the redirect URL
+    Dim MM_editRedirectUrl
+    MM_editRedirectUrl = "DDH.asp"
+    If (Request.QueryString <> "") Then
+      If (InStr(1, MM_editRedirectUrl, "?", vbTextCompare) = 0) Then
+        MM_editRedirectUrl = MM_editRedirectUrl & "?" & Request.QueryString
+      Else
+        MM_editRedirectUrl = MM_editRedirectUrl & "&" & Request.QueryString
+      End If
+    End If
+    Response.Redirect(MM_editRedirectUrl)
+  End If
+End If
+%>
+<%
+Dim DDH
+Dim DDH_cmd
+Dim DDH_numRows
+
+Set DDH_cmd = Server.CreateObject ("ADODB.Command")
+DDH_cmd.ActiveConnection = MM_Connection_STRING
+DDH_cmd.CommandText = "SELECT * FROM dbo.DonDatHang ORDER BY MaDDH DESC" 
+DDH_cmd.Prepared = true
+
+Set DDH = DDH_cmd.Execute
+DDH_numRows = 0
 %>
 <%
 Dim Repeat1__numRows
 Dim Repeat1__index
-Dim Num_page
-Dim Page
-Page = 0
 
-Repeat1__numRows = 5
-Num_page = Repeat1__numRows + 0
+Repeat1__numRows = -1
 Repeat1__index = 0
-SanPham_numRows = SanPham_numRows + Repeat1__numRows
-%>
-<%
-Dim Repeat2__numRows
-Dim Repeat2__index
-
-Repeat2__numRows = 5
-Repeat2__index = 0
-SanPham_numRows = SanPham_numRows + Repeat2__numRows
+DDH_numRows = DDH_numRows + Repeat1__numRows
 %>
 <%
 '  *** Recordset Stats, Move To Record, and Go To Record: declare stats variables
 
-Dim SanPham_total
-Dim SanPham_first
-Dim SanPham_last
+Dim DDH_total
+Dim DDH_first
+Dim DDH_last
 
 ' set the record count
-SanPham_total = SanPham.RecordCount
+DDH_total = DDH.RecordCount
 
 ' set the number of rows displayed on this page
-If (SanPham_numRows < 0) Then
-  SanPham_numRows = SanPham_total
-Elseif (SanPham_numRows = 0) Then
-  SanPham_numRows = 1
+If (DDH_numRows < 0) Then
+  DDH_numRows = DDH_total
+Elseif (DDH_numRows = 0) Then
+  DDH_numRows = 1
 End If
 
 ' set the first and last displayed record
-SanPham_first = 1
-SanPham_last  = SanPham_first + SanPham_numRows - 1
+DDH_first = 1
+DDH_last  = DDH_first + DDH_numRows - 1
 
 ' if we have the correct record count, check the other stats
-If (SanPham_total <> -1) Then
-  If (SanPham_first > SanPham_total) Then
-    SanPham_first = SanPham_total
+If (DDH_total <> -1) Then
+  If (DDH_first > DDH_total) Then
+    DDH_first = DDH_total
   End If
-  If (SanPham_last > SanPham_total) Then
-    SanPham_last = SanPham_total
+  If (DDH_last > DDH_total) Then
+    DDH_last = DDH_total
   End If
-  If (SanPham_numRows > SanPham_total) Then
-    SanPham_numRows = SanPham_total
+  If (DDH_numRows > DDH_total) Then
+    DDH_numRows = DDH_total
   End If
 End If
 %>
@@ -84,9 +122,9 @@ Dim MM_paramIsDefined
 Dim MM_param
 Dim MM_index
 
-Set MM_rs    = SanPham
-MM_rsCount   = SanPham_total
-MM_size      = SanPham_numRows
+Set MM_rs    = DDH
+MM_rsCount   = DDH_total
+MM_size      = DDH_numRows
 MM_uniqueCol = ""
 MM_paramName = ""
 MM_offset = 0
@@ -183,15 +221,15 @@ End If
 ' *** Move To Record: update recordset stats
 
 ' set the first and last displayed record
-SanPham_first = MM_offset + 1
-SanPham_last  = MM_offset + MM_size
+DDH_first = MM_offset + 1
+DDH_last  = MM_offset + MM_size
 
 If (MM_rsCount <> -1) Then
-  If (SanPham_first > MM_rsCount) Then
-    SanPham_first = MM_rsCount
+  If (DDH_first > MM_rsCount) Then
+    DDH_first = MM_rsCount
   End If
-  If (SanPham_last > MM_rsCount) Then
-    SanPham_last = MM_rsCount
+  If (DDH_last > MM_rsCount) Then
+    DDH_last = MM_rsCount
   End If
 End If
 
@@ -267,7 +305,6 @@ Dim MM_moveFirst
 Dim MM_moveLast
 Dim MM_moveNext
 Dim MM_movePrev
-Dim MM_numPage
 
 Dim MM_urlStr
 Dim MM_paramList
@@ -322,13 +359,13 @@ End If
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/normalize.min.css">
     <link rel="stylesheet" href="css/templatemo_style.css">
-<script src="../js/jquery.min.js"></script>
+ <script src="../js/jquery.min.js"></script>
 </head>
 <body>
-        <div id="top" class="site-header">
+<div class="site-header">
         <div id="templatemo_logo" class="row col-md-4 col-sm-6 col-xs-6">
                             <h1><a href="Products.asp">Admin</a></h1>
-          </div>
+  </div>
             <div class="container">
 <div class="gocphaimanhinhTV">
 <%
@@ -340,74 +377,75 @@ else
 end if
 %>
 </div>
-<div><p class="title" align="center">QUẢN LÝ SẢN PHẨM</p></div>
+<div id="top"><p class=title align=center>QUẢN LÝ SẢN PHẨM</p></div>
                          <!-- /.container -->
         </div> <!-- /.site-header -->
 </div> <!-- /#front -->
 <div class="site-slider"></div>
 <div class="clear"></div>
-	<div align="center" class="form_menu">
-            <a href="AddSp.asp" class="colorlink">
-            <button type="submit" name=cmdSubmit>Thêm sản phẩm mới</button>
-            </a>
-    </div>
-	<div align="center" class="form_menu">
-            <a href="DDH.asp" class="colorlink">
-            <button type="button" name=cmdSubmit>Xem đơn đặt hàng</button>
-            </a>
-    </div>
-<div class="product-item">
-  <table width="85%" border="0" cellspacing="0" cellpadding="0" align="center">
-    <% 
-While ((Repeat1__numRows <> 0) AND (NOT SanPham.EOF)) 
+    <p>
+      <script src="js/vendor/jquery-1.10.1.min.js"></script>
+      <script src="js/plugins.js"></script>
+      <script src="js/main.js"></script>
+    </p>
+<h1 style="color:rgb(0, 66, 255)" size="300%" align="center">ĐƠN ĐẶT HÀNG</h1>
+<%
+	  Dim M_TinhTrang
 %>
-  <tr>
-    <td width="15%"><p><img src="<%=(SanPham.Fields.Item("HinhAnh").Value)%>" alt="" name="" width="225" height="150"></p></td>
-    <td width="35%"><p>&nbsp;</p>
-      <table width="80%" border="0" cellspacing="0" cellpadding="0" align="center">
-        <tr>
-          <td width="30%">Tên</td>
-          <td width="30%"> <%=(SanPham.Fields.Item("TenSP").Value)%></td>
-        </tr>
-        <tr>
-          <td> Loại</td>
-          <td><%=(SanPham.Fields.Item("Loai").Value)%></td>
-        </tr>
-        <tr>
-          <td>Hãng</td>
-          <td><%=(SanPham.Fields.Item("NSX").Value)%></td>
-        </tr>
-        <tr>
-          <td>Giá</td>
-          <td><%=(SanPham.Fields.Item("Gia").Value)%><em> <u>VNĐ</u></em></td>
-        </tr>
-        <tr>
-          <td>Số lượng</td>
-          <td><%=(SanPham.Fields.Item("SoLuong").Value)%> sản phẩm</td>
-        </tr>
-      </table>
-      <p></p>
-      <p>&nbsp;</p></td>
-    <td width="20%"><form action="Editsp.asp" method="post" name="form1" id="form1">
-      <input name="MaSP" type="hidden" id="MaSP" value="<%=(SanPham.Fields.Item("MaSP").Value)%>">
-      <input name="NSX" type="hidden" id="NSX" value="<%=(SanPham.Fields.Item("MaNSX").Value)%>">
-      <input name="Loai" type="hidden" id="Loai" value="<%=(SanPham.Fields.Item("MaLoai").Value)%>">
-      <button type="submit" name="button" id="button" value="CẬP NHẬT">CẬP NHẬT</button>
-    </form></td>
-    <td width="15%"><form action="Removesp.asp" method="post" name="form1" id="form1">
-      <input name="MaSp" type="hidden" id="MaSp" value="<%=(SanPham.Fields.Item("MaSP").Value)%>">
-      <button type="submit" name="button2" id="button2" value="XÓA">XÓA</button>
-    </form></td>
-  </tr>
+<% 
+While ((Repeat1__numRows <> 0) AND (NOT DDH.EOF))
+	M_TinhTrang=(DDH.Fields.Item("TinhTrang").Value)
+%>
+
+  <div class="oneItem">
+    <table width="100%" style="margin-left:10px" border="2px" Bordercolor="black" cellspacing="0" cellpadding="100px" align="center">
+      <tr>
+        <td colspan="2" align="center"><b>ĐƠN ĐẶT HÀNG</b></td>
+      </tr>
+      <tr>
+        <td width="50%">    Mã đơn đặt hàng</td>
+        <td width="50%">    <b><%=(DDH.Fields.Item("MaDDH").Value)%></b></td>
+      </tr>
+      <tr>
+        <td>    Tài khoản khách hàng</td>
+        <td>    <%=(DDH.Fields.Item("TKKH").Value)%></td>
+      </tr>
+      <tr>
+        <td>    Ngày đặt</td>
+        <td>    <%=(DDH.Fields.Item("NgayDat").Value)%></td>
+      </tr>
+      <tr>
+        <td>    Tổng tiền</td>
+        <td>    <%=(DDH.Fields.Item("TongTien").Value)%><em> <u>VNĐ</u></em></td>
+      </tr>
+      <tr>
+        <td>    Tình trạng</td>
+        <td>    <%=(DDH.Fields.Item("TinhTrang").Value)%></td>
+      </tr>
+      <%
+	  Content = ""
+	  if M_TinhTrang ="Đã thanh toán       " then
+	  Content = Content & "</table><div style=margin-top:65px align=right><form action=CTDDH.asp method=post name=form1 id=form1> <p><input name=MaDDH type=hidden id=MaDDH value=" & DDH.Fields.Item("MaDDH").Value & "></p><button type=submit name=button id=button value=>XEM CHI TIẾT</button></form>"
+	  else
+	  Content = Content & "<tr><td colspan=2 align=center><form name=form2 method=POST action=" & MM_editAction & ">"
+	  Content = Content & "<input name=TinhTrang type=hidden id=TinhTrang value='Đã thanh toán'>"
+	  Content = Content & "<button type=submit name=button2 id=button2 value=>XÁC NHẬN THANH TOÁN</button>"
+	  Content = Content & "<input type=hidden name=MM_update value=form2>"
+	  Content = Content & "<input type=hidden name=MM_recordId value="& DDH.Fields.Item("MaDDH").Value & ">"
+	  Content = Content & "</form></td></tr>"
+	  Content = Content & "</table><div align=right><form action=CTDDH.asp method=post name=form1 id=form1> <p><input name=MaDDH type=hidden id=MaDDH value=" & DDH.Fields.Item("MaDDH").Value & "></p><button type=submit name=button id=button value=>XEM CHI TIẾT</button></form>"
+	  end if
+	  Response.Write(Content)
+	  %>
+    </div>
+  </div>
   <% 
   Repeat1__index=Repeat1__index+1
   Repeat1__numRows=Repeat1__numRows-1
-  SanPham.MoveNext()
+  DDH.MoveNext()
 Wend
 %>
-  </table>
-  
-        <span class="article-label">
+	<div>
         <A HREF="<%=MM_moveFirst%>">
             <button class="paging_left">
                 ◄◄&nbsp;&nbsp;<ins>TRANG ĐẦU</ins>
@@ -418,45 +456,26 @@ Wend
                 ◄&nbsp;&nbsp;&nbsp;<ins>TRƯỚC</ins>
             </button>
         </A>
-		<A HREF="<%=MM_moveLast%>">
+        <A HREF="<%=MM_moveLast%>">
             <button class="paging_right">
                 <ins>TRANG CUỐI</ins>&nbsp;&nbsp;►►
             </button>
         </A>
         <A HREF="<%=MM_moveNext%>">
-        <button class="paging_right">
+            <button class="paging_right">
                 <ins>SAU</ins>&nbsp;&nbsp;&nbsp;►
             </button>
         </A>
-        <% 
-While ((Repeat2__numRows <> 0) AND (NOT SanPham.EOF)) 
-Page=Page+1
-MM_numPage   = MM_urlStr & Page * Num_page
-%>
-
-  <A HREF="<%=MM_numPage%>">
-    <button class="paging_mid"><%=Page%></button>
-    </A>
-  <% 
-  Repeat2__index=Repeat2__index+1
-  Repeat2__numRows=Repeat2__numRows-1
-  SanPham.MoveNext()
-Wend
-%>
-	</span>
-  </div>
-<script src="js/vendor/jquery-1.10.1.min.js"></script>
-<script src="js/plugins.js"></script>
-<script src="js/main.js"></script>
+	</div>
 <div class="footer-bar">
     <span class="article-wrapper">
-	<span >
-        <span class="article-link"><a href="#" target="_top">Lên <ins>TOP▲</ins></a></span>
+        <span class="article-label">Trang quản lý</span>
+        <span class="article-link"><a href="#">Lên <ins>TOP▲</ins></a></span>
     </span>
 </div>
 </body>
 </html>
 <%
-SanPham.Close()
-Set SanPham = Nothing
+DDH.Close()
+Set DDH = Nothing
 %>

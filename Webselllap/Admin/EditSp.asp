@@ -71,32 +71,6 @@ function GetFolderName(str):  GetFolderName = Ris : end function
 function myGetFileName(str):  myGetFileName = Ris : end function
 %>
 <%
-Dim Loai
-Dim Loai_cmd
-Dim Loai_numRows
-
-Set Loai_cmd = Server.CreateObject ("ADODB.Command")
-Loai_cmd.ActiveConnection = MM_Connection_STRING
-Loai_cmd.CommandText = "SELECT * FROM dbo.LoaiSP ORDER BY MaLoai ASC" 
-Loai_cmd.Prepared = true
-
-Set Loai = Loai_cmd.Execute
-Loai_numRows = 0
-%>
-<%
-Dim NSX
-Dim NSX_cmd
-Dim NSX_numRows
-
-Set NSX_cmd = Server.CreateObject ("ADODB.Command")
-NSX_cmd.ActiveConnection = MM_Connection_STRING
-NSX_cmd.CommandText = "SELECT * FROM dbo.NSX ORDER BY MaNSX ASC" 
-NSX_cmd.Prepared = true
-
-Set NSX = NSX_cmd.Execute
-NSX_numRows = 0
-%>
-<%
 Dim SanPham__MMColParam
 SanPham__MMColParam = "1"
 If (Request.Form("MaSP") <> "") Then 
@@ -110,7 +84,7 @@ Dim SanPham_numRows
 
 Set SanPham_cmd = Server.CreateObject ("ADODB.Command")
 SanPham_cmd.ActiveConnection = MM_Connection_STRING
-SanPham_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE MaSP = ?" 
+SanPham_cmd.CommandText = "SELECT a.MaSP, a.TenSP, a.MaNSX, a.MaLoai, a.HinhAnh, a.Gia, a.Tinhtrang, a.SoLuong, a.CauHinh,a.GhiChu , b.Loai, c.NSX FROM dbo.SanPham a, dbo.LoaiSP b, dbo.NSX c WHERE MaSP = ? and a.Tinhtrang=1 and a.MaLoai=b.MaLoai and a.MaNSX=c.MaNSX" 
 SanPham_cmd.Prepared = true
 SanPham_cmd.Parameters.Append SanPham_cmd.CreateParameter("param1", 5, 1, -1, SanPham__MMColParam) ' adDouble
 
@@ -123,15 +97,10 @@ SanPham_numRows = 0
 <title>Quản trị viên :: Groupfour</title>
 <link rel="shortcut icon" href="../images/icon.png">
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/normalize.min.css">
-    <link rel="stylesheet" href="css/animate.css">
-    <link rel="stylesheet" href="css/templatemo_misc.css">
     <link rel="stylesheet" href="css/templatemo_style.css">
  <script src="../js/jquery.min.js"></script>
 </head>
@@ -139,14 +108,14 @@ SanPham_numRows = 0
         <div class="site-header">
         <div id="templatemo_logo" class="row col-md-4 col-sm-6 col-xs-6">
                             <h1><a href="Products.asp">Admin</a></h1>
-            </div>
+          </div>
             <div class="container">
 <div class="gocphaimanhinhTV">
 <%
 if Session("name") = "" then
 	Response.Redirect("loginAD.asp")
 else
-	Response.write("Xin chào, <b class=tentk>" & Session("name") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2 <ins>Thoát<ins></a>")
+	Response.write("Xin chào, <b class=tentk>" & Session("name") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2><ins>Thoát</ins></a>")
 	
 end if
 %>
@@ -158,7 +127,7 @@ end if
 <div class="site-slider"></div>
 <div class="clear"></div>
     <div id="top"></div>
-    <h1 style="color:#0CF" size="300%" align="center">Cập Nhật</h1>
+    <h1 style="color:rgb(0, 66, 255)" size="300%" align="center">CẬP NHẬT SẢN PHẨM</h1>
 <div class="item">
   <form ACTION="<%=editAction%>" onsubmit="return ProgressBar()" method="post" enctype="multipart/form-data" name="form1">
     <table width="85%" border="0" cellspacing="0" cellpadding="0" align="center">
@@ -170,18 +139,18 @@ end if
       <tr>
         <td>Loại</td>
         <td><label for="Loai"></label>
-          <select name="Loai" class="list-group-item-info" id="Loai">
+          <select name="Loai" class="list-group-item-info" id="Loai" title="<%=(SanPham.Fields.Item("MaLoai").Value)%>">
             <%
-While (NOT Loai.EOF)
+While (NOT SanPham.EOF)
 %>
-            <option value="<%=(Loai.Fields.Item("MaLoai").Value)%>" <%If (Not isNull((Loai.Fields.Item("MaLoai").Value))) Then If (CStr(Loai.Fields.Item("MaLoai").Value) = CStr((Loai.Fields.Item("MaLoai").Value))) Then Response.Write("selected=""selected""") : Response.Write("")%> ><%=(Loai.Fields.Item("Loai").Value)%></option>
+            <option value="<%=(SanPham.Fields.Item("MaLoai").Value)%>" <%If (Not isNull((SanPham.Fields.Item("MaLoai").Value))) Then If (CStr(SanPham.Fields.Item("MaLoai").Value) = CStr((SanPham.Fields.Item("MaLoai").Value))) Then Response.Write("selected=""selected""") : Response.Write("")%> ><%=(SanPham.Fields.Item("Loai").Value)%></option>
             <%
-  Loai.MoveNext()
+  SanPham.MoveNext()
 Wend
-If (Loai.CursorType > 0) Then
-  Loai.MoveFirst
+If (SanPham.CursorType > 0) Then
+  SanPham.MoveFirst
 Else
-  Loai.Requery
+  SanPham.Requery
 End If
 %>
           </select></td>
@@ -190,18 +159,18 @@ End If
         <td>NSX</td>
         <td><label for="textfield2"></label>
           <label for="NSX"></label>
-          <select name="NSX" class="list-group-item-info" id="NSX">
+          <select name="NSX" class="list-group-item-info" id="NSX" title="<%=(SanPham.Fields.Item("MaNSX").Value)%>">
             <%
-While (NOT NSX.EOF)
+While (NOT SanPham.EOF)
 %>
-            <option value="<%=(NSX.Fields.Item("MaNSX").Value)%>" <%If (Not isNull((NSX.Fields.Item("MaNSX").Value))) Then If (CStr(NSX.Fields.Item("MaNSX").Value) = CStr((NSX.Fields.Item("MaNSX").Value))) Then Response.Write("selected=""selected""") : Response.Write("")%> ><%=(NSX.Fields.Item("NSX").Value)%></option>
+            <option value="<%=(SanPham.Fields.Item("MaNSX").Value)%>" <%If (Not isNull((SanPham.Fields.Item("MaNSX").Value))) Then If (CStr(SanPham.Fields.Item("MaNSX").Value) = CStr((SanPham.Fields.Item("MaNSX").Value))) Then Response.Write("selected=""selected""") : Response.Write("")%> ><%=(SanPham.Fields.Item("NSX").Value)%></option>
             <%
-  NSX.MoveNext()
+  SanPham.MoveNext()
 Wend
-If (NSX.CursorType > 0) Then
-  NSX.MoveFirst
+If (SanPham.CursorType > 0) Then
+  SanPham.MoveFirst
 Else
-  NSX.Requery
+  SanPham.Requery
 End If
 %>
           </select></td>
@@ -247,21 +216,14 @@ End If
 <div class="footer-bar">
     <span class="article-wrapper">
         <span class="article-label">Trang quản lý</span>
-        <span class="article-link"><a href="#top">Lên top</a></span>
+        <span class="article-link"><a href="#">Lên <ins>TOP▲</ins></a></span>
     </span>
 </div>
 </body>
 </html>
 <!--#include file="../UploadFiles/Upload.asp" -->
 <!--#include file="../UploadFiles/UploadAdvanced.asp" -->
-<%
-Loai.Close()
-Set Loai = Nothing
-%>
-<%
-NSX.Close()
-Set NSX = Nothing
-%>
+
 <%
 SanPham.Close()
 Set SanPham = Nothing

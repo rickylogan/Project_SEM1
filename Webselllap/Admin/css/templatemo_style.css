@@ -89,7 +89,8 @@ form input[type="password"] {
   background: #fff;
   border: 1px solid #333;
   padding: 7px 10px;
-  width: 40%;
+  width: 20%;
+  margin-right: 20px;
 }
 form input[type="text"]:focus,
 form input[type="email"]:focus,

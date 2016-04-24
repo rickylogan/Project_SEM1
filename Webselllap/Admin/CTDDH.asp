@@ -2,7 +2,7 @@
 <!--#include file="../Connections/Connection.asp" -->
 <%
 Dim CTDDH__MMColParam
-CTDDH__MMColParam = "2"
+CTDDH__MMColParam = "1"
 If (Request.Form("MaDDH") <> "") Then 
   CTDDH__MMColParam = Request.Form("MaDDH")
 End If
@@ -42,10 +42,10 @@ CTDDH_numRows = 0
             <div class="container">
 <div class="gocphaimanhinhTV">
 <%
-if Session("name") = "" then
+if Session("TKA") = "" then
 	Response.Redirect("loginAD.asp")
 else
-	Response.write("Xin chào, <b class=tentk>" & Session("name") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2><ins>Thoát</ins></a>")
+	Response.write("Xin chào, <b class=tentk>" & Session("TenAD") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2><ins>Thoát</ins></a>")
 	
 end if
 %>
@@ -96,15 +96,14 @@ end if
 	Content = ""
 	M_TinhTrang = (CTDDH.Fields.Item("TinhTrang").Value)
 	if M_TinhTrang = "Đã thanh toán       " then
-	Content = Content & "<div><form action=EditThanhToan.asp method=post name=form1 id=form1>"
+	Content = Content & "<div><form action='Confirm_EditTT.asp' method=post name=form1 id=form1>"
 	Content = Content & "<p><input name=MaDDH type=hidden id=MaDDH value=" & (CTDDH.Fields.Item("MaDDH").Value) & "></p>"
-	Content = Content & "<button type=submit name=button id=button class=paging_right value=>CẬP NHẬT LẠI<br/>ĐƠN ĐẶT HÀNG</button></form></div>"
+	Content = Content & "<input style=float:right type=password name=txtPassword placeholder='MẬT KHẨU CẬP NHẬT LẠI TÌNH TRẠNG ĐƠN ĐẶT HÀNG' required></button></form></div>"
 	else
 	Content = Content & ""
 	End if
 	Response.Write(Content)
 %>
-
 <script src="js/vendor/jquery-1.10.1.min.js"></script>
 <script src="js/plugins.js"></script>
 <script src="js/main.js"></script>

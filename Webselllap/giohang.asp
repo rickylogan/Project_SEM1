@@ -9,7 +9,7 @@
 <body>
 	<%
 		'Khai bao gio hang
-		Dim p(100, 5)
+		Dim p(100, 6)
 		Dim dem
 		dem = 0
 		Dim tongtien

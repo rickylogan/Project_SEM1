@@ -7,7 +7,7 @@ Dim LAPTOP_numRows
 
 Set LAPTOP_cmd = Server.CreateObject ("ADODB.Command")
 LAPTOP_cmd.ActiveConnection = MM_Connection_STRING
-LAPTOP_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE Tinhtrang = 1 and MaLoai=1 ORDER BY MaSP DESC" 
+LAPTOP_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE Tinhtrang = 1 and MaLoai = 1" 
 LAPTOP_cmd.Prepared = true
 
 Set LAPTOP = LAPTOP_cmd.Execute
@@ -17,8 +17,8 @@ LAPTOP_numRows = 0
 Dim Repeat1__numRows
 Dim Repeat1__index
 
+Repeat1__numRows = 9
 Repeat1__index = 0
-Repeat1__numRows = 6
 LAPTOP_numRows = LAPTOP_numRows + Repeat1__numRows
 %>
 <%
@@ -75,8 +75,8 @@ Dim MM_index
 Set MM_rs    = LAPTOP
 MM_rsCount   = LAPTOP_total
 MM_size      = LAPTOP_numRows
-MM_uniqueCol = "MaSP"
-MM_paramName = "id1"
+MM_uniqueCol = ""
+MM_paramName = ""
 MM_offset = 0
 MM_atTotal = false
 MM_paramIsDefined = false
@@ -117,45 +117,6 @@ if (Not MM_paramIsDefined And MM_rsCount <> 0) then
   Wend
   If (MM_rs.EOF) Then 
     MM_offset = MM_index  ' set MM_offset to the last possible record
-  End If
-
-End If
-%>
-<%
-' *** Move To Specific Record: handle detail parameter
-
-If (MM_paramIsDefined And MM_rsCount <> 0) Then
-
-  ' get the value of the parameter
-  MM_param = Request.QueryString(MM_paramName)
-
-  ' find the record with the unique column value equal to the parameter value
-  MM_offset = 0
-  Do While (Not MM_rs.EOF)
-    If (CStr(MM_rs.Fields.Item(MM_uniqueCol).Value) = MM_param) Then
-      Exit Do
-    End If
-    MM_offset = MM_offset + 1
-    MM_rs.MoveNext
-  Loop
-
-  ' if not found, set the number of records and reset the cursor
-  If (MM_rs.EOF) Then
-    If (MM_rsCount < 0) Then
-      MM_rsCount = MM_offset
-    End If
-    If (MM_size < 0 Or MM_size > MM_offset) Then
-      MM_size = MM_offset
-    End If
-    MM_offset = 0
-
-    ' reset the cursor to the beginning
-    If (MM_rs.CursorType > 0) Then
-      MM_rs.MoveFirst
-    Else
-      MM_rs.Close
-      MM_rs.Open
-    End If
   End If
 
 End If
@@ -368,27 +329,30 @@ End If
 <%
 if Session("TKKH") = "" then
 	Response.write("<a rel=nofollow href=../login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=../login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
+	Response.write("<div style=margin-top:-20px class=cntr>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=../logout.asp class=colorlink2 <ins>Thoát<ins></a>")
-	
+	Response.write("<div><p algin=right class=thongtincanhan><a href=../SuaTTCN.asp rel=nofollow class=colorlink><span><ins>Thông Tin Cá Nhân</ins></span></a></p></div>")
+	Response.write("<div style=margin-top:-45px class=cntr>")
 end if
 %>
-	</div>
-</div>
-
     <!---------------------------
                 SEARCH
     ---------------------------->
-    <div class="cntr">
-        <div class="cntr-innr">
-          <form  action="Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
-                <input name="txtSearch" type="text" id="inpt_search" />
-            </form>
-            <p>Tìm kiếm</p>
-            <p style="margin-left: 1000px"><a href="../HienThi.asp" class=colorlink> Giỏ Hàng </a><%Session("dem")%></p>
-      </div>
-    </div>
-  
+		<div class="cntr-innr">
+              <form  action="../Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
+                    <input name="txtSearch" type="text" id="inpt_search" />
+                </form>
+                <p>Tìm kiếm</p>
+          </div>
+        </div>
+        <div>
+            <a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
+            <p> <% Response.Write(Session("dem")) %></p>
+        </div>
+	</div>
+</div>
+
 <div class="pages-top">
     <div class="logo">
         <a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
@@ -399,9 +363,11 @@ end if
                 MENU
     ---------------------------->
 				<ul class="nav">
-                    <li><a href="../index.asp">Trang chủ</a></li>
-                    <li class="active"><a href="../Laptop/Laptop.asp">Laptop</a>
-                    <li><a href="../Desktop/Desktop.asp">Desktop</a>
+					<li><a href="../index.asp">Trang chủ</a></li>
+					<li class="active"><a href="../Laptop/Laptop.asp">Laptop</a>
+						
+					</li>
+					<li><a href="../Desktop/Desktop.asp">Desktop</a>
 						<ul>
 							<li>
                                 <form name="frmDell" method="post" action=Desktop/Dell.asp>
@@ -444,7 +410,7 @@ end if
                             </li>
 							<li>
                                 <form name="frmVGA" method="post" action=Linhkien/RAM.asp>
-                                <a href="../Linhkien/VGA.asp">Card VGA</a>
+                                <a href="../Linhkien/VGA.asp">Card màn hình</a>
                                 </form>
                             </li>
                             <li>
@@ -490,7 +456,7 @@ end if
 					</li>
 					<li><a href="../Lienhe/Lienhe.asp">Liên hệ</a></li>
 				</ul>
-				<script type="text/javascript" src="../js/nav.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
 			</div>
             <!-- END MENU -->
 			<div class="clear"></div>
@@ -505,28 +471,30 @@ end if
 				<div class="cont1 span_2_of_g1">
 				  <p>CÁC SẢN PHẨM LAPTOP MỚI NHẤT</p>
 				  <p>&nbsp;</p>
-                  <% 
+				  <% 
 While ((Repeat1__numRows <> 0) AND (NOT LAPTOP.EOF)) 
 %>
   <div class="oneItem">
-    <p align="center"><img src="<%=(LAPTOP.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"><%=(LAPTOP.Fields.Item("TenSP").Value)%></p>
-    <p align="center">Giá: <%=(LAPTOP.Fields.Item("Gia").Value)%></p>
-    <p align="center">Hiện còn <%=(LAPTOP.Fields.Item("SoLuong").Value)%> sản phẩm</p>
-    <p align="center">&nbsp;</p>
-    <form name="form1" method="post" action="ctspLaptop.asp">
-      <input name="MaSP" type="hidden" id="MaSP" value="<%=(LAPTOP.Fields.Item("MaSP").Value)%>">
-      <label>
-        <input type="submit" name="btnchitiet" id="btnchitiet" value="Xem chi tiết sản phẩm...">
-        </label>
-      </form>
+    <p><a href="ctspLaptop.asp?<%=(LAPTOP.Fields.Item("MaSP").Value)%>"><img src="<%=(LAPTOP.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"></a></p>
+    <p>Sản phẩm: <%=(LAPTOP.Fields.Item("TenSP").Value)%></p>
+    <p>Giá: <%=(LAPTOP.Fields.Item("Gia").Value)%></p>
+    <p>Hiện còn <%=(LAPTOP.Fields.Item("SoLuong").Value)%> sản phẩm</p>
   </div>
-  <% 
+  
+<% 
   Repeat1__index=Repeat1__index+1
   Repeat1__numRows=Repeat1__numRows-1
   LAPTOP.MoveNext()
 Wend
 %>
-                </div>
+<br>
+             <div style="margin-top:10px; margin-bottom:10px; float:left">
+              <p>&nbsp;<A HREF="<%=MM_moveFirst%>">&lt;&lt;Trang đầu </A><A HREF="<%=MM_movePrev%>">&lt;&lt;Trước </A>**** <A HREF="<%=MM_moveNext%>">Tiếp&gt;&gt;</A> <A HREF="<%=MM_moveLast%>">Trang cuối&gt;&gt;</A></p>
+              </div>
+
+              </div>
+              
+  
  </div>
        </div>
                
@@ -568,11 +536,6 @@ Wend
                     <a href="Lenovo.asp">LENOVO</a>
                     </form>
                 </li>
-                <li>
-                    <form name="frmVaio" method="post" action=Vaio.asp>
-                    <a href="Vaio.asp">VAIO</a>
-                    </form>
-                </li>
 			</ul>
 			<div class="clear"></div>
 	      </div>
@@ -597,8 +560,9 @@ Wend
 			</ul>
 		   </div>
 	   </div>
-		   <div class="clear"></div>
-		   <p>&nbsp;<A HREF="<%=MM_moveFirst%>">&lt;&lt;Trang đầu </A><A HREF="<%=MM_movePrev%>">&lt;&lt;Trước </A>**1** <A HREF="<%=MM_moveNext%>">Tiếp&gt;&gt;</A> <A HREF="<%=MM_moveLast%>">Trang cuối&gt;&gt;</A></p>
+		   <div class="clear"></div>	
+</div>
+		  </div>
 </div>
 <!---------------------------
                 BOTTOM

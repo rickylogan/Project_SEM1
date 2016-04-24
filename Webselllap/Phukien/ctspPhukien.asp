@@ -50,13 +50,17 @@ CTSPDESKTOP_numRows = 0
 <div class="wrap"> 
     <div class="gocphaimanhinhTV">
 <%
-if Session("TKKH") = "" then
+if Session("name") = "" then
 	Response.write("<a rel=nofollow href=../login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=../login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=../logout.asp class=colorlink2 <ins>Thoát<ins></a>")
 	
 end if
 %>
+	<div class="giohang">
+    	<a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
+        <p class="soluong"> <% Response.Write(Session("dem")) %></p>
+    </div>
 	</div>
 </div>
 
@@ -82,7 +86,7 @@ end if
 		<ul class="nav">
 					<li><a href="../index.asp">Trang chủ</a></li>
 					<li><a href="../Laptop/Laptop.asp">Laptop</a>
-						<ul class="listmenu">
+						<ul>
 							<li>
                                 <form name="frmDell" method="post" action=laptop/Dell.asp>
                                 <a href="../Laptop/Dell.asp">DELL</a>
@@ -121,7 +125,7 @@ end if
 						</ul>
 					</li>
 					<li><a href="../Desktop/Desktop.asp">Desktop</a>
-						<ul class="listmenu">
+						<ul>
 							<li>
                                 <form name="frmDell" method="post" action=Desktop/Dell.asp>
                                 <a href="../Desktop/Dell.asp">DELL</a>
@@ -163,7 +167,7 @@ end if
                             </li>
 							<li>
                                 <form name="frmVGA" method="post" action=Linhkien/RAM.asp>
-                                <a href="../Linhkien/VGA.asp">Card VGA</a>
+                                <a href="../Linhkien/VGA.asp">Card màn hình</a>
                                 </form>
                             </li>
                             <li>
@@ -179,8 +183,9 @@ end if
 						</ul>
 					</li>
 					<li class="active"><a href="../Phukien/Phukien.asp">Phụ kiện</a>
+						
 					</li>
-					<li><a href="../Lienhe/Lienhe.asp">Liên hệ</a></li>
+					<li><a href="Lienhe/Lienhe.asp">Liên hệ</a></li>
 				</ul>
 <script type="text/javascript" src="../js/nav.js"></script>
 			</div>

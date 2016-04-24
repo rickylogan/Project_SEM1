@@ -10,7 +10,9 @@
 <body>
 <div class="cntr">
     <%
-        Content = ""							
+        Sub Session_OnStart
+		End Sub
+		Content = ""							
         QStr = Request.QueryString("loginAD")
         if QStr="passfailed" then
 			Content = Content & "<div class=box>"				

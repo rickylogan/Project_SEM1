@@ -327,42 +327,45 @@ End If
 <div class="wrap"> 
     <div class="gocphaimanhinhTV">
 <%
-if Session("TKKH") = "" then
+if Session("name") = "" then
 	Response.write("<a rel=nofollow href=../login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=../login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=../logout.asp class=colorlink2 <ins>Thoát<ins></a>")
 	
 end if
 %>
+	<div class="giohang">
+    	<a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
+        <p class="soluong"> <% Response.Write(Session("dem")) %></p>
+    </div>
 	</div>
 </div>
 
-        <!---------------------------
+    <!---------------------------
                 SEARCH
     ---------------------------->
     <div class="cntr">
         <div class="cntr-innr">
-          <form  action="Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
-                <input name="txtSearch" type="text" id="inpt_search" />
-            </form>
-            <p>Tìm kiếm</p>
-            <p style="margin-left: 1000px"><a href="../HienThi.asp" class=colorlink> Giỏ Hàng </a><%Session("dem")%></p>
-      </div>
+          <label class="search" for="inpt_search">
+                <input id="inpt_search" type="text" />
+            </label>
+            <p>Sờ vào để tìm thứ bạn cần.</p>
+        </div>
     </div>
-  
-<div class="pages-top">
-    <div class="logo">
-        <a href="../index.asp"><img src="images/logo.png" alt=""/></a>
-    </div>
-             
+	<div class="pages-top">
+	        <div class="logo">
+				<a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
+			 </div>
 		     <div class="h_menu4">
     <!---------------------------
                 MENU
     ---------------------------->
 				<ul class="nav">
-				 <li><a href="../index.asp">Trang chủ</a></li>
-                    <li class="active"><a href="../Laptop/Laptop.asp">Laptop</a>
-                    <li><a href="../Desktop/Desktop.asp">Desktop</a>
+					<li><a href="../index.asp">Trang chủ</a></li>
+					<li class="active"><a href="../Laptop/Laptop.asp">Laptop</a>
+						
+					</li>
+					<li><a href="../Desktop/Desktop.asp">Desktop</a>
 						<ul>
 							<li>
                                 <form name="frmDell" method="post" action=Desktop/Dell.asp>
@@ -405,7 +408,7 @@ end if
                             </li>
 							<li>
                                 <form name="frmVGA" method="post" action=Linhkien/RAM.asp>
-                                <a href="../Linhkien/VGA.asp">Card VGA</a>
+                                <a href="../Linhkien/VGA.asp">Card màn hình</a>
                                 </form>
                             </li>
                             <li>

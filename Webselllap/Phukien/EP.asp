@@ -7,7 +7,7 @@ Dim PHUKIEN_EARPHONES_numRows
 
 Set PHUKIEN_EARPHONES_cmd = Server.CreateObject ("ADODB.Command")
 PHUKIEN_EARPHONES_cmd.ActiveConnection = MM_Connection_STRING
-PHUKIEN_EARPHONES_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE Tinhtrang = 1 and TenSP like '%earphone%'" 
+PHUKIEN_EARPHONES_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE Tinhtrang = 1 and MaLoai = 4  and TenSP like '%earphone%'" 
 PHUKIEN_EARPHONES_cmd.Prepared = true
 
 Set PHUKIEN_EARPHONES = PHUKIEN_EARPHONES_cmd.Execute
@@ -327,42 +327,43 @@ End If
 <div class="wrap"> 
     <div class="gocphaimanhinhTV">
 <%
-if Session("TKKH") = "" then
+if Session("name") = "" then
 	Response.write("<a rel=nofollow href=../login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=../login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=../logout.asp class=colorlink2 <ins>Thoát<ins></a>")
 	
 end if
 %>
+	<div class="giohang">
+    	<a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
+        <p class="soluong"> <% Response.Write(Session("dem")) %></p>
+    </div>
 	</div>
 </div>
 
-        <!---------------------------
+    <!---------------------------
                 SEARCH
     ---------------------------->
     <div class="cntr">
         <div class="cntr-innr">
-          <form  action="Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
-                <input name="txtSearch" type="text" id="inpt_search" />
-            </form>
-            <p>Tìm kiếm</p>
-            <p style="margin-left: 1000px"><a href="HienThi.asp"> Giỏ Hàng </a><%Session("dem")%></p>
-      </div>
+          <label class="search" for="inpt_search">
+                <input id="inpt_search" type="text" />
+            </label>
+            <p>Sờ vào để tìm thứ bạn cần.</p>
+        </div>
     </div>
-  
-<div class="pages-top">
-    <div class="logo">
-        <a href="index.asp"><img src="images/logo.png" alt=""/></a>
-    </div>
-             
+	<div class="pages-top">
+	        <div class="logo">
+				<a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
+			 </div>
 		     <div class="h_menu4">
    <!---------------------------
                 MENU
     ---------------------------->
 				<ul class="nav">
-				 <li><a href="../index.asp">Trang chủ</a></li>
+					<li><a href="../index.asp">Trang chủ</a></li>
 					<li><a href="../Laptop/Laptop.asp">Laptop</a>
-						<ul class="listmenu">
+						<ul>
 							<li>
                                 <form name="frmDell" method="post" action=laptop/Dell.asp>
                                 <a href="../Laptop/Dell.asp">DELL</a>
@@ -401,7 +402,7 @@ end if
 						</ul>
 					</li>
 					<li><a href="../Desktop/Desktop.asp">Desktop</a>
-						<ul class="listmenu">
+						<ul>
 							<li>
                                 <form name="frmDell" method="post" action=Desktop/Dell.asp>
                                 <a href="../Desktop/Dell.asp">DELL</a>
@@ -443,7 +444,7 @@ end if
                             </li>
 							<li>
                                 <form name="frmVGA" method="post" action=Linhkien/RAM.asp>
-                                <a href="../Linhkien/VGA.asp">Card VGA</a>
+                                <a href="../Linhkien/VGA.asp">Card màn hình</a>
                                 </form>
                             </li>
                             <li>
@@ -459,8 +460,9 @@ end if
 						</ul>
 					</li>
 					<li class="active"><a href="../Phukien/Phukien.asp">Phụ kiện</a>
+						
 					</li>
-					<li><a href="../Lienhe/Lienhe.asp">Liên hệ</a></li>
+					<li><a href="Lienhe/Lienhe.asp">Liên hệ</a></li>
 				</ul>
 <script type="text/javascript" src="../js/nav.js"></script>
 			</div>

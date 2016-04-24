@@ -54,8 +54,8 @@ End If
 <%
 Dim DDH__MMColParam
 DDH__MMColParam = "1"
-If (Request.Form("MaDDH") <> "") Then 
-  DDH__MMColParam = Request.Form("MaDDH")
+If (Session("MaDDH") <> "") Then 
+  DDH__MMColParam = Session("MaDDH")
 End If
 %>
 <%
@@ -65,7 +65,7 @@ Dim DDH_numRows
 
 Set DDH_cmd = Server.CreateObject ("ADODB.Command")
 DDH_cmd.ActiveConnection = MM_Connection_STRING
-DDH_cmd.CommandText = "SELECT * FROM dbo.DonDatHang WHERE MaDDH = ? ORDER BY MaDDH DESC" 
+DDH_cmd.CommandText = "SELECT * FROM dbo.DonDatHang WHERE MaDDH = ?" 
 DDH_cmd.Prepared = true
 DDH_cmd.Parameters.Append DDH_cmd.CreateParameter("param1", 5, 1, -1, DDH__MMColParam) ' adDouble
 
@@ -93,10 +93,12 @@ DDH_numRows = 0
             <div class="container">
 <div class="gocphaimanhinhTV">
 <%
-if Session("name") = "" then
+if Session("TKA") = ""  then
 	Response.Redirect("loginAD.asp")
+elseif Session("confirm")="" then 
+	Response.Redirect("DDH.asp")
 else
-	Response.write("Xin chào, <b class=tentk>" & Session("name") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2><ins>Thoát</ins></a>")
+	Response.write("Xin chào, <b class=tentk>" & Session("TenAD") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2><ins>Thoát</ins></a>")
 	
 end if
 %>
@@ -154,6 +156,7 @@ end if
 	  Content = Content & "</form></td></tr>"
 	  end if
 	  Response.Write(Content)
+	  Session("confirm")=""
 	  %>
   </table>
     <p>&nbsp; </p>

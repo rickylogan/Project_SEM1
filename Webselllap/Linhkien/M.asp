@@ -327,13 +327,17 @@ End If
 <div class="wrap"> 
     <div class="gocphaimanhinhTV">
 <%
-if Session("TKKH") = "" then
+if Session("name") = "" then
 	Response.write("<a rel=nofollow href=../login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=../login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=../logout.asp class=colorlink2 <ins>Thoát<ins></a>")
 	
 end if
 %>
+	<div class="giohang">
+    	<a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
+        <p class="soluong"> <% Response.Write(Session("dem")) %></p>
+    </div>
 	</div>
 </div>
 
@@ -357,41 +361,113 @@ end if
                 MENU
     ---------------------------->
 				<ul class="nav">
-				  <li><a href="../index.asp">Trang chủ</a></li>
-					<li><a href="../laptop/laptop.asp">Laptop</a>
-						<ul class="listmenu">
-							<li><a href="../laptop/laptop.asp">DELL</a></li>
-							<li><a href="../laptop/laptop.asp">HP</a></li>
-							<li><a href="../laptop/laptop.asp">APPLE</a></li>
-							<li><a href="../laptop/laptop.asp">ACER</a></li>
-							<li><a href="../laptop/laptop.asp">ASUS</a></li>
-							<li><a href="../laptop/laptop.asp">LENOVO</a></li>
-							<li><a href="../laptop/laptop.asp">VAIO</a></li>
+					<li><a href="../index.asp">Trang chủ</a></li>
+					<li><a href="../Laptop/Laptop.asp">Laptop</a>
+						<ul>
+							<li>
+                                <form name="frmDell" method="post" action=laptop/Dell.asp>
+                                <a href="../Laptop/Dell.asp">DELL</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmHp" method="post" action=laptop/Hp.asp>
+                                <a href="../Laptop/Hp.asp">HP</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmApple" method="post" action=laptop/Apple.asp>
+                                <a href="../Laptop/Apple.asp">APPLE</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmAsus" method="post" action=laptop/sus.asp>
+                                <a href="../Laptop/Asus.asp">ASUS</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmAcer" method="post" action=laptop/Acer.asp>
+                                <a href="../Laptop/Acer.asp">ACER</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="Lenovo" method="post" action=laptop/Lenovo.asp>
+                                <a href="../Laptop/Lenovo.asp">LENOVO</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmVaio" method="post" action=laptop/Vaio.asp>
+                                <a href="../Laptop/Vaio.asp">VAIO</a>
+                                </form>
+                            </li>
 						</ul>
 					</li>
-					<li><a href="../desktop/desktop.asp">Desktop</a>
+					<li><a href="../Desktop/Desktop.asp">Desktop</a>
+						<ul>
+							<li>
+                                <form name="frmDell" method="post" action=Desktop/Dell.asp>
+                                <a href="../Desktop/Dell.asp">DELL</a>
+                                </form>
+                            </li>
+							<li>
+                                <form name="frmHp" method="post" action=Desktop/Hp.asp>
+                                <a href="../Desktop/Hp.asp">HP</a>
+                                </form>
+                            </li>
+							<li>
+                                <form name="frmApple" method="post" action=Desktop/Apple.asp>
+                                <a href="../Desktop/Apple.asp">APPLE</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmAsus" method="post" action=Desktop/Asus.asp>
+                                <a href="../Desktop/Asus.asp">ASUS</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmAcer" method="post" action=Desktop/Acer.asp>
+                                <a href="../Desktop/Acer.asp">ACER</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="Lenovo" method="post" action=Desktop/Lenovo.asp>
+                                <a href="../Desktop/Lenovo.asp">LENOVO</a>
+                         	   </form>
+							</li>
+         			   </ul>
+					</li>
+					<li class="active"><a href="../Linhkien/Linhkien.asp">Linh kiện</a>
+						
+					</li>
+					<li><a href="../Phukien/Phukien.asp">Phụ kiện</a>
 						<ul class="listmenu">
-							<li><a href="../desktop/desktop.asp">DELL</a></li>
-							<li><a href="../desktop/desktop.asp">HP</a></li>
-							<li><a href="../desktop/desktop.asp">APPLE</a></li>
-							<li><a href="../desktop/desktop.asp">ACER</a></li>
-							<li><a href="../desktop/desktop.asp">ASUS</a></li>
-							<li><a href="../desktop/desktop.asp">LENOVO</a></li>
+                        	<li>
+                                <form name="frmHP" method="post" action=Phukien/HP.asp>
+                                <a href="../Phukien/HP.asp">Headphones</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmEP" method="post" action=Phukien/EP.asp>
+                                <a href="../Phukien/EP.asp">Earphones</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmCQ" method="post" action=Phukien/CQ.asp>
+                                <a href="../Phukien/CQ.asp">Chuột</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmBP" method="post" action=Phukien/BP.asp>
+                                <a href="../Phukien/BP.asp">Bàn Phím</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmUSB" method="post" action=Phukien/USB.asp>
+                                <a href="../Phukien/USB.asp">USB</a>
+                                </form>
+                            </li>
 						</ul>
 					</li>
-					<li class="active"><a href="../linhkien/linhkien.asp">Linh kiện</a>
-					
-					</li>
-					<li><a href="../phukien/phukien.asp">Phụ kiện</a>
-						<ul class="listmenu">
-							<li><a href="../phukien/phukien.asp">Headphones</a></li>
-							<li><a href="../phukien/phukien.asp">Earphones</a></li>
-							<li><a href="../phukien/phukien.asp">Chuột</a></li>
-							<li><a href="../phukien/phukien.asp">Keyboard (bàn phím)</a></li>
-							<li><a href="../phukien/phukien.asp">USB</a></li>
-						</ul>
-					</li>
-					<li><a href="../lienhe/lienhe.asp">Liên hệ</a></li>
+					<li><a href="../Lienhe/Lienhe.asp">Liên hệ</a></li>
 				</ul>
 <script type="text/javascript" src="../js/nav.js"></script>
 			</div>
@@ -447,6 +523,7 @@ Wend
 		  <div class="project-list">
 	     	<h4>Loại</h4>
 			<ul class="blog-list">
+				
 				<li>
                     <form name="frmDell" method="post" action=Dell.asp>
                     <a href="RAM.asp">RAM</a>
@@ -467,7 +544,8 @@ Wend
                     <a href="SC.asp">Card âm thanh</a>
                     </form>
                 </li>
-            </ul>
+            
+			</ul>
 			<div class="clear"></div>
          </div>
 		   <div class="project-list1">

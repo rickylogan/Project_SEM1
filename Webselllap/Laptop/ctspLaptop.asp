@@ -1,25 +1,28 @@
 <%@LANGUAGE="VBSCRIPT" CODEPAGE="65001"%>
 <!--#include file="../Connections/Connection.asp" -->
 <%
-Dim CTSPLAPTOP__MMColParam
-CTSPLAPTOP__MMColParam = "22"
-If (Request.Form("MaSP")  <> "") Then 
-  CTSPLAPTOP__MMColParam = Request.Form("MaSP") 
+Dim IdLaptop
+IdLaptop = Request.QueryString
+
+Dim CTSPDESKTOP__MMColParam
+CTSPDESKTOP__MMColParam = IdLaptop '"8"
+If (Request.Form("MaSP") <> "") Then 
+  CTSPDESKTOP__MMColParam = Request.Form("MaSP")
 End If
 %>
 <%
-Dim CTSPLAPTOP
-Dim CTSPLAPTOP_cmd
-Dim CTSPLAPTOP_numRows
+Dim CTSPDESKTOP
+Dim CTSPDESKTOP_cmd
+Dim CTSPDESKTOP_numRows
 
-Set CTSPLAPTOP_cmd = Server.CreateObject ("ADODB.Command")
-CTSPLAPTOP_cmd.ActiveConnection = MM_Connection_STRING
-CTSPLAPTOP_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE MaSP = ?" 
-CTSPLAPTOP_cmd.Prepared = true
-CTSPLAPTOP_cmd.Parameters.Append CTSPLAPTOP_cmd.CreateParameter("param1", 5, 1, -1, CTSPLAPTOP__MMColParam) ' adDouble
+Set CTSPDESKTOP_cmd = Server.CreateObject ("ADODB.Command")
+CTSPDESKTOP_cmd.ActiveConnection = MM_Connection_STRING
+CTSPDESKTOP_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE MaSP = ?" 
+CTSPDESKTOP_cmd.Prepared = true
+CTSPDESKTOP_cmd.Parameters.Append CTSPDESKTOP_cmd.CreateParameter("param1", 5, 1, -1, CTSPDESKTOP__MMColParam) ' adDouble
 
-Set CTSPLAPTOP = CTSPLAPTOP_cmd.Execute
-CTSPLAPTOP_numRows = 0
+Set CTSPDESKTOP = CTSPDESKTOP_cmd.Execute
+CTSPDESKTOP_numRows = 0
 %>
 <!DOCTYPE HTML>
 <html>
@@ -50,13 +53,17 @@ CTSPLAPTOP_numRows = 0
 <div class="wrap"> 
     <div class="gocphaimanhinhTV">
 <%
-if Session("TKKH") = "" then
+if Session("name") = "" then
 	Response.write("<a rel=nofollow href=../login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=../login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=../logout.asp class=colorlink2 <ins>Thoát<ins></a>")
 	
 end if
 %>
+	<div class="giohang">
+    	<a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
+        <p class="soluong"> <% Response.Write(Session("dem")) %></p>
+    </div>
 	</div>
 </div>
 
@@ -80,9 +87,11 @@ end if
                 MENU
     ---------------------------->
 		<ul class="nav">
-					 <li><a href="../index.asp">Trang chủ</a></li>
-                    <li class="active"><a href="../Laptop/Laptop.asp">Laptop</a>
-                    <li><a href="../Desktop/Desktop.asp">Desktop</a>
+					<li><a href="../index.asp">Trang chủ</a></li>
+					<li class="active"><a href="../Laptop/Laptop.asp">Laptop</a>
+						
+					</li>
+					<li><a href="../Desktop/Desktop.asp">Desktop</a>
 						<ul>
 							<li>
                                 <form name="frmDell" method="post" action=Desktop/Dell.asp>
@@ -125,7 +134,7 @@ end if
                             </li>
 							<li>
                                 <form name="frmVGA" method="post" action=Linhkien/RAM.asp>
-                                <a href="../Linhkien/VGA.asp">Card VGA</a>
+                                <a href="../Linhkien/VGA.asp">Card màn hình</a>
                                 </form>
                             </li>
                             <li>
@@ -184,40 +193,41 @@ end if
 	 	<div class="wrap">
 	 		<div class="pages">
 	 		  <div class="cont1 span_2_of_g1">
-		      <p>QUÝ KHÁCH ĐANG XEM SẢN PHẨM </p>
-		      <p><%=(CTSPLAPTOP.Fields.Item("TenSP").Value)%></p>
-			    <p><img src="<%=(CTSPLAPTOP.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"></p>
-			    <table width="568" height="155" border="1">
+              <div  align="center">
+		      <p>QUÝ KHÁCH ĐANG XEM SẢN PHẨM</p>
+		      <p><%=(CTSPDESKTOP.Fields.Item("TenSP").Value)%></p>
+			    <p><img src="<%=(CTSPDESKTOP.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"></p>
+			    <table width="356" height="155" border="1">
 			      <tr>
-			        <td width="136">Tên sản phẩm</td>
-			        <td width="416"><%=(CTSPLAPTOP.Fields.Item("TenSP").Value)%></td>
+			        <td width="168">Tên sản phẩm</td>
+			        <td width="124"><%=(CTSPDESKTOP.Fields.Item("TenSP").Value)%></td>
 		          </tr>
 			      <tr>
 			        <td>Thông tin sản phẩm</td>
-			        <td><%=(CTSPLAPTOP.Fields.Item("CauHinh").Value)%></td>
+			        <td><%=(CTSPDESKTOP.Fields.Item("CauHinh").Value)%></td>
 		          </tr>
 			      <tr>
 			        <td>Giá</td>
-			        <td><%=(CTSPLAPTOP.Fields.Item("Gia").Value)%> VNĐ</td>
+			        <td><%=(CTSPDESKTOP.Fields.Item("Gia").Value)%> VNĐ</td>
 		          </tr>
 			      <tr>
 			        <td>Số lượng</td>
-			        <td><%=(CTSPLAPTOP.Fields.Item("SoLuong").Value)%></td>
+			        <td><%=(CTSPDESKTOP.Fields.Item("SoLuong").Value)%></td>
 		          </tr>
 		        </table>
 			    <p>&nbsp;</p>
 				 
 				  <div>
 				  <form name="form2" method="post" action="../giohang.asp">
-				    <label>
-				      <input type="image" name="imageField" id="imageField" src="../Images/giohang.jpg" width="100" height="50">Mua hàng
+				    <label style="float:right">
+				      <Button type="image" name="imageField" id="imageField"><img src="../Images/Giohang_index.png" width="60" height="51"><p>Đặt hàng</p></Button>
 				    </label>
-				    
-                    <input name="MaSPDatHang" type="hidden" id="MaSPDatHang" value="<%=(CTSPLAPTOP.Fields.Item("MaSP").Value)%>">
-                    <input name="TenSP" type="hidden" id="TenSP" value="<%=(CTSPLAPTOP.Fields.Item("TenSP").Value)%>">
-				  <input name="HinhAnh" type="hidden" id="HinhAnh" value="<%=(CTSPLAPTOP.Fields.Item("HinhAnh").Value)%>">
-				  <input name="Gia" type="hidden" id="Gia" value="<%=(CTSPLAPTOP.Fields.Item("Gia").Value)%>">
+                    <input name="MaSPDatHang" type="hidden" id="MaSPDatHang" value="<%=(CTSPDESKTOP.Fields.Item("MaSP").Value)%>">
+                    <input name="TenSP" type="hidden" id="TenSP" value="<%=(CTSPDESKTOP.Fields.Item("TenSP").Value)%>">
+				  <input name="HinhAnh" type="hidden" id="HinhAnh" value="<%=(CTSPDESKTOP.Fields.Item("HinhAnh").Value)%>">
+				  <input name="Gia" type="hidden" id="Gia" value="<%=(CTSPDESKTOP.Fields.Item("Gia").Value)%>">
 				  </form>
+                  </div>
 			    </div>
 				  <div style="clear:both; text-align:center">
 				    
@@ -258,11 +268,6 @@ end if
                 <li>
                     <form name="Lenovo" method="post" action=Lenovo.asp>
                     <a href="Lenovo.asp">LENOVO</a>
-                    </form>
-                </li>
-                <li>
-                    <form name="frmVaio" method="post" action=Vaio.asp>
-                    <a href="Vaio.asp">VAIO</a>
                     </form>
                 </li>
 			</ul>
@@ -381,6 +386,6 @@ end if
 </body>
 </html>
 <%
-CTSPLAPTOP.Close()
-Set CTSPLAPTOP = Nothing
+CTSPDESKTOP.Close()
+Set CTSPDESKTOP = Nothing
 %>

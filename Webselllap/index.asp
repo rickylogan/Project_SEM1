@@ -1,6 +1,8 @@
 ﻿<%@LANGUAGE="VBSCRIPT" CODEPAGE="65001"%>
 <!--#include file="Connections/Connection.asp" -->
 <%
+Sub Session_OnStart
+End Sub
 Dim SanPham
 Dim SanPham_cmd
 Dim SanPham_numRows
@@ -31,8 +33,8 @@ SanPham_numRows = SanPham_numRows + Repeat1__numRows
 <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
 <link href='http://fonts.googleapis.com/css?family=Lato:400,300,600,700,800' rel='stylesheet' type='text/css'>
 	<!--jquery lightbox-->
-<script type="text/javascript" src="../js/jquery.lightbox.js"></script>
-<link rel="stylesheet" type="text/css" href="../css/lightbox.css" media="screen" />
+<script type="text/javascript" src="js/jquery.lightbox.js"></script>
+<link rel="stylesheet" type="text/css" href="css/lightbox.css" media="screen" />
 
         <!---------------------------
                      CLOCK
@@ -86,27 +88,30 @@ SanPham_numRows = SanPham_numRows + Repeat1__numRows
 <%
 if Session("TKKH") = "" then
 	Response.write("<a rel=nofollow href=login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
+	Response.write("<div style=margin-top:-20px class=cntr>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=logout.asp class=colorlink2 <ins>Thoát<ins></a>")
-	
+	Response.write("<div><p algin=right class=thongtincanhan><a href=SuaTTCN.asp rel=nofollow class=colorlink><span><ins>Thông Tin Cá Nhân</ins></span></a></p></div>")
+	Response.write("<div style=margin-top:-45px class=cntr>")
 end if
 %>
-	</div>
-</div>
-
     <!---------------------------
                 SEARCH
     ---------------------------->
-    <div class="cntr">
-        <div class="cntr-innr">
-          <form  action="Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
-                <input name="txtSearch" type="text" id="inpt_search" />
-            </form>
-            <p>Tìm kiếm</p>
-            <p style="margin-left: 1000px"><a href="HienThi.asp" class="colorlink"> Giỏ Hàng </a><%Session("dem")%></p>
-      </div>
-    </div>
-  
+		<div class="cntr-innr">
+              <form  action="Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
+                    <input name="txtSearch" type="text" id="inpt_search" />
+                </form>
+                <p>Tìm kiếm</p>
+          </div>
+        </div>
+        <div>
+            <a href="HienThi.asp"><img width="50" height="50" src="Images/giohang_index.png" /></a>
+            <p> <% Response.Write(Session("dem")) %></p>
+        </div>
+	</div>
+</div>
+
 <div class="pages-top">
     <div class="logo">
         <a href="index.asp"><img src="images/logo.png" alt=""/></a>

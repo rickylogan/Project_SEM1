@@ -1,5 +1,5 @@
 /* reset */
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,dl,dt,dd,ol,nav ul,nav li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:5;border:0;font:inherit;vertical-align:baseline;}
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,img,ins,kbd,q,s,samp,small,strike,sub,sup,tt,var,b,u,i,dl,dt,dd,ol,nav ul,nav li,fieldset,form,label,legend,caption,tbody,tfoot,thead,th,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:5;border:0;font:inherit;vertical-align:baseline;}
 article, aside, details, figcaption, figure,footer, header, hgroup, menu, nav, section {display: block;}
 ol,ul{list-style:none;margin:0;padding:0;}
 blockquote,q{quotes:none;}
@@ -78,8 +78,7 @@ body{
 }
 .nav:before,
 .nav:after {
-    content: " "; 
-    display: table; 
+    content: " ";
 }
 .nav:after {
     clear: both;
@@ -1058,17 +1057,6 @@ ul.dc_paginationA06 li a:hover, ul.dc_paginationA06 li a.current {
 	line-height: 1.5em;
 	margin-top:3%;
 }
-.button {
-	margin-top: 20px;
-}
-.button a {
-	color:#FFA540;
-	font-size: 0.85em;
-	text-transform: uppercase;
-}
-.button a:hover {
-	color:#555;
-}
 .blog-poast-admin {
 	position: absolute;
 	bottom:7.6em;
@@ -1087,7 +1075,6 @@ ul.dc_paginationA06 li a:hover, ul.dc_paginationA06 li a.current {
 	text-align: center;
 }
 .blog-poast-info ul li {
-	display:inline-table;
 	margin-right: 1em;
 }
 .blog-poast-info ul li a {
@@ -2527,6 +2514,8 @@ text-decoration:none;
 a.colorlink:hover
 {
 color:#F09;
+transform: translateY(-3px);
+box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.2);
 }
  
 .colorlink:active
@@ -2612,4 +2601,29 @@ ul.blog-list li a:hover {
 }
 .canhgiua{
 	margin:0 auto 0;
+}
+
+/*-------------------------
+		BUTTON
+--------------------------*/
+button {
+  border: none;
+  background: #FFA540;
+  font-size:15pt;
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 10px 30px 10px 30px;
+  width: auto;
+  color: white;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+}
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.2);
+}
+img:hover {
+	transform: translateY(-4px);
+}
+li:hover {
+	transform: translateY(-4px);
 }

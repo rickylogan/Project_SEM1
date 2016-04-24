@@ -1,57 +1,57 @@
 ﻿<%@LANGUAGE="VBSCRIPT" CODEPAGE="65001"%>
 <!--#include file="../Connections/Connection.asp" -->
 <%
-Dim LinhKien
-Dim LinhKien_cmd
-Dim LinhKien_numRows
+Dim PHUKIEN
+Dim PHUKIEN_cmd
+Dim PHUKIEN_numRows
 
-Set LinhKien_cmd = Server.CreateObject ("ADODB.Command")
-LinhKien_cmd.ActiveConnection = MM_Connection_STRING
-LinhKien_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE Tinhtrang = 1 and MaLoai = 3" 
-LinhKien_cmd.Prepared = true
+Set PHUKIEN_cmd = Server.CreateObject ("ADODB.Command")
+PHUKIEN_cmd.ActiveConnection = MM_Connection_STRING
+PHUKIEN_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE Tinhtrang = 1 and MaLoai = 3" 
+PHUKIEN_cmd.Prepared = true
 
-Set LinhKien = LinhKien_cmd.Execute
-LinhKien_numRows = 0
+Set PHUKIEN = PHUKIEN_cmd.Execute
+PHUKIEN_numRows = 0
 %>
 <%
 Dim Repeat1__numRows
 Dim Repeat1__index
 
-Repeat1__numRows = 6
+Repeat1__numRows = 9
 Repeat1__index = 0
-LinhKien_numRows = LinhKien_numRows + Repeat1__numRows
+PHUKIEN_numRows = PHUKIEN_numRows + Repeat1__numRows
 %>
 <%
 '  *** Recordset Stats, Move To Record, and Go To Record: declare stats variables
 
-Dim LinhKien_total
-Dim LinhKien_first
-Dim LinhKien_last
+Dim PHUKIEN_total
+Dim PHUKIEN_first
+Dim PHUKIEN_last
 
 ' set the record count
-LinhKien_total = LinhKien.RecordCount
+PHUKIEN_total = PHUKIEN.RecordCount
 
 ' set the number of rows displayed on this page
-If (LinhKien_numRows < 0) Then
-  LinhKien_numRows = LinhKien_total
-Elseif (LinhKien_numRows = 0) Then
-  LinhKien_numRows = 1
+If (PHUKIEN_numRows < 0) Then
+  PHUKIEN_numRows = PHUKIEN_total
+Elseif (PHUKIEN_numRows = 0) Then
+  PHUKIEN_numRows = 1
 End If
 
 ' set the first and last displayed record
-LinhKien_first = 1
-LinhKien_last  = LinhKien_first + LinhKien_numRows - 1
+PHUKIEN_first = 1
+PHUKIEN_last  = PHUKIEN_first + PHUKIEN_numRows - 1
 
 ' if we have the correct record count, check the other stats
-If (LinhKien_total <> -1) Then
-  If (LinhKien_first > LinhKien_total) Then
-    LinhKien_first = LinhKien_total
+If (PHUKIEN_total <> -1) Then
+  If (PHUKIEN_first > PHUKIEN_total) Then
+    PHUKIEN_first = PHUKIEN_total
   End If
-  If (LinhKien_last > LinhKien_total) Then
-    LinhKien_last = LinhKien_total
+  If (PHUKIEN_last > PHUKIEN_total) Then
+    PHUKIEN_last = PHUKIEN_total
   End If
-  If (LinhKien_numRows > LinhKien_total) Then
-    LinhKien_numRows = LinhKien_total
+  If (PHUKIEN_numRows > PHUKIEN_total) Then
+    PHUKIEN_numRows = PHUKIEN_total
   End If
 End If
 %>
@@ -72,9 +72,9 @@ Dim MM_paramIsDefined
 Dim MM_param
 Dim MM_index
 
-Set MM_rs    = LinhKien
-MM_rsCount   = LinhKien_total
-MM_size      = LinhKien_numRows
+Set MM_rs    = PHUKIEN
+MM_rsCount   = PHUKIEN_total
+MM_size      = PHUKIEN_numRows
 MM_uniqueCol = ""
 MM_paramName = ""
 MM_offset = 0
@@ -171,15 +171,15 @@ End If
 ' *** Move To Record: update recordset stats
 
 ' set the first and last displayed record
-LinhKien_first = MM_offset + 1
-LinhKien_last  = MM_offset + MM_size
+PHUKIEN_first = MM_offset + 1
+PHUKIEN_last  = MM_offset + MM_size
 
 If (MM_rsCount <> -1) Then
-  If (LinhKien_first > MM_rsCount) Then
-    LinhKien_first = MM_rsCount
+  If (PHUKIEN_first > MM_rsCount) Then
+    PHUKIEN_first = MM_rsCount
   End If
-  If (LinhKien_last > MM_rsCount) Then
-    LinhKien_last = MM_rsCount
+  If (PHUKIEN_last > MM_rsCount) Then
+    PHUKIEN_last = MM_rsCount
   End If
 End If
 
@@ -329,27 +329,30 @@ End If
 <%
 if Session("TKKH") = "" then
 	Response.write("<a rel=nofollow href=../login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=../login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
+	Response.write("<div style=margin-top:-20px class=cntr>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=../logout.asp class=colorlink2 <ins>Thoát<ins></a>")
-	
+	Response.write("<div><p algin=right class=thongtincanhan><a href=../SuaTTCN.asp rel=nofollow class=colorlink><span><ins>Thông Tin Cá Nhân</ins></span></a></p></div>")
+	Response.write("<div style=margin-top:-45px class=cntr>")
 end if
 %>
-	</div>
-</div>
-
     <!---------------------------
                 SEARCH
     ---------------------------->
-    <div class="cntr">
-        <div class="cntr-innr">
-          <form  action="Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
-                <input name="txtSearch" type="text" id="inpt_search" />
-            </form>
-            <p>Tìm kiếm</p>
-            <p style="margin-left: 1000px"><a href="../HienThi.asp" class=colorlink> Giỏ Hàng </a><%Session("dem")%></p>
-      </div>
-    </div>
-  
+		<div class="cntr-innr">
+              <form  action="../Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
+                    <input name="txtSearch" type="text" id="inpt_search" />
+                </form>
+                <p>Tìm kiếm</p>
+          </div>
+        </div>
+        <div>
+            <a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
+            <p> <% Response.Write(Session("dem")) %></p>
+        </div>
+	</div>
+</div>
+
 <div class="pages-top">
     <div class="logo">
         <a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
@@ -359,48 +362,121 @@ end if
     <!---------------------------
                 MENU
     ---------------------------->
-				<ul class="nav">
+					<ul class="nav">
 					<li><a href="../index.asp">Trang chủ</a></li>
-					<li><a href="../laptop/laptop.asp">Laptop</a>
-						<ul class="listmenu">
-							<li><a href="../laptop/laptop.asp">DELL</a></li>
-							<li><a href="../laptop/laptop.asp">HP</a></li>
-							<li><a href="../laptop/laptop.asp">APPLE</a></li>
-							<li><a href="../laptop/laptop.asp">ACER</a></li>
-							<li><a href="../laptop/laptop.asp">ASUS</a></li>
-							<li><a href="../laptop/laptop.asp">LENOVO</a></li>
-							<li><a href="../laptop/laptop.asp">VAIO</a></li>
+					<li><a href="../Laptop/Laptop.asp">Laptop</a>
+						<ul>
+							<li>
+                                <form name="frmDell" method="post" action=laptop/Dell.asp>
+                                <a href="../Laptop/Dell.asp">DELL</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmHp" method="post" action=laptop/Hp.asp>
+                                <a href="../Laptop/Hp.asp">HP</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmApple" method="post" action=laptop/Apple.asp>
+                                <a href="../Laptop/Apple.asp">APPLE</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmAsus" method="post" action=laptop/sus.asp>
+                                <a href="../Laptop/Asus.asp">ASUS</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmAcer" method="post" action=laptop/Acer.asp>
+                                <a href="../Laptop/Acer.asp">ACER</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="Lenovo" method="post" action=laptop/Lenovo.asp>
+                                <a href="../Laptop/Lenovo.asp">LENOVO</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmVaio" method="post" action=laptop/Vaio.asp>
+                                <a href="../Laptop/Vaio.asp">VAIO</a>
+                                </form>
+                            </li>
 						</ul>
 					</li>
-					<li><a href="../desktop/desktop.asp">Desktop</a>
+					<li><a href="../Desktop/Desktop.asp">Desktop</a>
+						<ul>
+							<li>
+                                <form name="frmDell" method="post" action=Desktop/Dell.asp>
+                                <a href="../Desktop/Dell.asp">DELL</a>
+                                </form>
+                            </li>
+							<li>
+                                <form name="frmHp" method="post" action=Desktop/Hp.asp>
+                                <a href="../Desktop/Hp.asp">HP</a>
+                                </form>
+                            </li>
+							<li>
+                                <form name="frmApple" method="post" action=Desktop/Apple.asp>
+                                <a href="../Desktop/Apple.asp">APPLE</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmAsus" method="post" action=Desktop/Asus.asp>
+                                <a href="../Desktop/Asus.asp">ASUS</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmAcer" method="post" action=Desktop/Acer.asp>
+                                <a href="../Desktop/Acer.asp">ACER</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="Lenovo" method="post" action=Desktop/Lenovo.asp>
+                                <a href="../Desktop/Lenovo.asp">LENOVO</a>
+                         	   </form>
+							</li>
+         			   </ul>
+					</li>
+					<li class="active"><a href="../Linhkien/Linhkien.asp">Linh kiện</a>
+						
+					</li>
+					<li><a href="../Phukien/Phukien.asp">Phụ kiện</a>
 						<ul class="listmenu">
-							<li><a href="../desktop/desktop.asp">DELL</a></li>
-							<li><a href="../desktop/desktop.asp">HP</a></li>
-							<li><a href="../desktop/desktop.asp">APPLE</a></li>
-							<li><a href="../desktop/desktop.asp">ACER</a></li>
-							<li><a href="../desktop/desktop.asp">ASUS</a></li>
-							<li><a href="../desktop/desktop.asp">LENOVO</a></li>
+                        	<li>
+                                <form name="frmHP" method="post" action=Phukien/HP.asp>
+                                <a href="../Phukien/HP.asp">Headphones</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmEP" method="post" action=Phukien/EP.asp>
+                                <a href="../Phukien/EP.asp">Earphones</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmCQ" method="post" action=Phukien/CQ.asp>
+                                <a href="../Phukien/CQ.asp">Chuột</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmBP" method="post" action=Phukien/BP.asp>
+                                <a href="../Phukien/BP.asp">Bàn Phím</a>
+                                </form>
+                            </li>
+                            <li>
+                                <form name="frmUSB" method="post" action=Phukien/USB.asp>
+                                <a href="../Phukien/USB.asp">USB</a>
+                                </form>
+                            </li>
 						</ul>
 					</li>
-					<li class="active"><a href="../linhkien/linhkien.asp">Linh kiện</a>
-					
-					</li>
-					<li><a href="../phukien/phukien.asp">Phụ kiện</a>
-						<ul class="listmenu">
-							<li><a href="../phukien/phukien.asp">Headphones</a></li>
-							<li><a href="../phukien/phukien.asp">Earphones</a></li>
-							<li><a href="../phukien/phukien.asp">Chuột</a></li>
-							<li><a href="../phukien/phukien.asp">Keyboard (bàn phím)</a></li>
-							<li><a href="../phukien/phukien.asp">USB</a></li>
-						</ul>
-					</li>
-					<li><a href="../lienhe/lienhe.asp">Liên hệ</a></li>
+					<li><a href="../Lienhe/Lienhe.asp">Liên hệ</a></li>
 				</ul>
-				<script type="text/javascript" src="../js/nav.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
 			</div>
-            <!--End menu-->
+            <!-- END MENU -->
 			<div class="clear"></div>
-		</div><!-- end header_main4 -->
+		</div>
+<!-- End header main -->
      </div>
 <!--gallary-->
 
@@ -408,30 +484,38 @@ end if
 	 	<div class="wrap">
 	 		<div class="pages">
 				<div class="cont1 span_2_of_g1">
-				  <p>CÁC SẢN PHẨM LINH KIỆN MỚI NHẤT</p>
+				  <p>CÁC SẢN PHẨM PHUKIEN MỚI NHẤT</p>
 				  <p>&nbsp;</p>
                   <% 
-While ((Repeat1__numRows <> 0) AND (NOT LinhKien.EOF)) 
+While ((Repeat1__numRows <> 0) AND (NOT PHUKIEN.EOF)) 
 %>
   <div class="oneItem">
-    <p align="center"><img src="<%=(LinhKien.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"><%=(LinhKien.Fields.Item("TenSP").Value)%></p>
-    <p align="center">Giá: <%=(LinhKien.Fields.Item("Gia").Value)%></p>
-    <p align="center">Hiện còn <%=(LinhKien.Fields.Item("SoLuong").Value)%> sản phẩm</p>
-    <p align="center">&nbsp;</p>
+    <p><img src="<%=(PHUKIEN.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150">Sản phẩm: <%=(PHUKIEN.Fields.Item("TenSP").Value)%></p>
+    <p>Giá: <%=(PHUKIEN.Fields.Item("Gia").Value)%></p>
+    <p>Hiện còn <%=(PHUKIEN.Fields.Item("SoLuong").Value)%> sản phẩm</p>
+    <p>&nbsp;</p>
     <form name="form1" method="post" action="ctspLinhkien.asp">
-      <input name="MaSP" type="hidden" id="MaSP" value="<%=(LinhKien.Fields.Item("MaSP").Value)%>">
+      <input name="MaSP" type="hidden" id="MaSP" value="<%=(PHUKIEN.Fields.Item("MaSP").Value)%>">
       <label>
         <input type="submit" name="btnchitiet" id="btnchitiet" value="Xem chi tiết sản phẩm...">
-        </label>
-      </form>
+      </label>
+    </form>
+    
   </div>
-  <% 
+  
+<% 
   Repeat1__index=Repeat1__index+1
   Repeat1__numRows=Repeat1__numRows-1
-  LinhKien.MoveNext()
+  PHUKIEN.MoveNext()
 Wend
 %>
-                </div>
+             <div style="margin-top:10px; margin-bottom:10px; float:left">
+              <p>&nbsp;<A HREF="<%=MM_moveFirst%>">&lt;&lt;Trang đầu </A><A HREF="<%=MM_movePrev%>">&lt;&lt;Trước </A>**** <A HREF="<%=MM_moveNext%>">Tiếp&gt;&gt;</A> <A HREF="<%=MM_moveLast%>">Trang cuối&gt;&gt;</A></p>
+              </div>
+
+              </div>
+              
+  
  </div>
        </div>
                
@@ -441,6 +525,7 @@ Wend
 		  <div class="project-list">
 	     	<h4>Loại</h4>
 			<ul class="blog-list">
+				<ul class="blog-list">
 				<li>
                     <form name="frmDell" method="post" action=Dell.asp>
                     <a href="RAM.asp">RAM</a>
@@ -463,7 +548,7 @@ Wend
                 </li>
             </ul>
 			<div class="clear"></div>
-		   </div>
+	      </div>
 		   <div class="project-list1">
 			<div class="clear"></div>
 		   </div>
@@ -485,8 +570,9 @@ Wend
 			</ul>
 		   </div>
 	   </div>
-		   <div class="clear"></div>
-		   <p>&nbsp;<A HREF="<%=MM_moveFirst%>">&lt;&lt;Trang đầu </A><A HREF="<%=MM_movePrev%>">&lt;&lt;Trước </A>**** <A HREF="<%=MM_moveNext%>">Tiếp&gt;&gt;</A> <A HREF="<%=MM_moveLast%>">Trang cuối&gt;&gt;</A></p>
+		   <div class="clear"></div>	
+</div>
+		  </div>
 </div>
 <!---------------------------
                 BOTTOM
@@ -576,6 +662,6 @@ Wend
 </body>
 </html>
 <%
-LinhKien.Close()
-Set LinhKien = Nothing
+PHUKIEN.Close()
+Set PHUKIEN = Nothing
 %>

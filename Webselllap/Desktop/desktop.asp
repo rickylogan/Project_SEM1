@@ -17,7 +17,7 @@ DESKTOP_numRows = 0
 Dim Repeat1__numRows
 Dim Repeat1__index
 
-Repeat1__numRows = 6
+Repeat1__numRows = 9
 Repeat1__index = 0
 DESKTOP_numRows = DESKTOP_numRows + Repeat1__numRows
 %>
@@ -329,26 +329,30 @@ End If
 <%
 if Session("TKKH") = "" then
 	Response.write("<a rel=nofollow href=../login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=../login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
+	Response.write("<div style=margin-top:-20px class=cntr>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=../logout.asp class=colorlink2 <ins>Thoát<ins></a>")
-	
+	Response.write("<div><p algin=right class=thongtincanhan><a href=../SuaTTCN.asp rel=nofollow class=colorlink><span><ins>Thông Tin Cá Nhân</ins></span></a></p></div>")
+	Response.write("<div style=margin-top:-45px class=cntr>")
 end if
 %>
-	</div>
-</div>
     <!---------------------------
                 SEARCH
     ---------------------------->
-    <div class="cntr">
-        <div class="cntr-innr">
-          <form  action="Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
-                <input name="txtSearch" type="text" id="inpt_search" />
-            </form>
-            <p>Tìm kiếm</p>
-            <p style="margin-left: 1000px"><a href="../HienThi.asp" class=colorlink> Giỏ Hàng </a><%Session("dem")%></p>
-      </div>
-    </div>
-  
+		<div class="cntr-innr">
+              <form  action="../Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
+                    <input name="txtSearch" type="text" id="inpt_search" />
+                </form>
+                <p>Tìm kiếm</p>
+          </div>
+        </div>
+        <div>
+            <a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
+            <p> <% Response.Write(Session("dem")) %></p>
+        </div>
+	</div>
+</div>
+
 <div class="pages-top">
     <div class="logo">
         <a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
@@ -455,7 +459,7 @@ end if
 					</li>
 					<li><a href="../Lienhe/Lienhe.asp">Liên hệ</a></li>
 				</ul>
-				<script type="text/javascript" src="../js/nav.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
 			</div>
             <!-- END MENU -->
 			<div class="clear"></div>
@@ -474,24 +478,32 @@ end if
 While ((Repeat1__numRows <> 0) AND (NOT DESKTOP.EOF)) 
 %>
   <div class="oneItem">
-    <p align="center"><img src="<%=(DESKTOP.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"><%=(DESKTOP.Fields.Item("TenSP").Value)%></p>
-    <p align="center">Giá: <%=(DESKTOP.Fields.Item("Gia").Value)%></p>
-    <p align="center">Hiện còn <%=(DESKTOP.Fields.Item("SoLuong").Value)%> sản phẩm</p>
-    <p align="center">&nbsp;</p>
+    <p><img src="<%=(DESKTOP.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150">Sản phẩm: <%=(DESKTOP.Fields.Item("TenSP").Value)%></p>
+    <p>Giá: <%=(DESKTOP.Fields.Item("Gia").Value)%></p>
+    <p>Hiện còn <%=(DESKTOP.Fields.Item("SoLuong").Value)%> sản phẩm</p>
+    <p>&nbsp;</p>
     <form name="form1" method="post" action="ctspDesktop.asp">
       <input name="MaSP" type="hidden" id="MaSP" value="<%=(DESKTOP.Fields.Item("MaSP").Value)%>">
       <label>
         <input type="submit" name="btnchitiet" id="btnchitiet" value="Xem chi tiết sản phẩm...">
-        </label>
-      </form>
+      </label>
+    </form>
+    
   </div>
-  <% 
+  
+<% 
   Repeat1__index=Repeat1__index+1
   Repeat1__numRows=Repeat1__numRows-1
   DESKTOP.MoveNext()
 Wend
 %>
-                </div>
+             <div style="margin-top:10px; margin-bottom:10px; float:left">
+              <p>&nbsp;<A HREF="<%=MM_moveFirst%>">&lt;&lt;Trang đầu </A><A HREF="<%=MM_movePrev%>">&lt;&lt;Trước </A>**** <A HREF="<%=MM_moveNext%>">Tiếp&gt;&gt;</A> <A HREF="<%=MM_moveLast%>">Trang cuối&gt;&gt;</A></p>
+              </div>
+
+              </div>
+              
+  
  </div>
        </div>
                
@@ -557,10 +569,11 @@ Wend
 			</ul>
 		   </div>
 	   </div>
-		   <div class="clear"></div>
-		   <p>&nbsp;<A HREF="<%=MM_moveFirst%>">&lt;&lt;Trang đầu </A><A HREF="<%=MM_movePrev%>">&lt;&lt;Trước </A>**** <A HREF="<%=MM_moveNext%>">Tiếp&gt;&gt;</A> <A HREF="<%=MM_moveLast%>">Trang cuối&gt;&gt;</A></p>
+		   <div class="clear"></div>	
 </div>
-<!---------------------------
+		  </div>
+</div>
+	<!---------------------------
                 BOTTOM
     ---------------------------->
         <div class="footer">

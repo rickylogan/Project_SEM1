@@ -332,10 +332,10 @@ End If
             <div class="container">
 <div class="gocphaimanhinhTV">
 <%
-if Session("name") = "" then
+if Session("TKA") = "" then
 	Response.Redirect("loginAD.asp")
 else
-	Response.write("Xin chào, <b class=tentk>" & Session("name") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2><ins>Thoát</ins></a>")
+	Response.write("Xin chào, <b class=tentk>" & Session("TenAD") & "</b><b class=to> |</b>" & "<a href=logoutAD.asp class=colorlink2><ins>Thoát</ins></a>")
 	
 end if
 %>

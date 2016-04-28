@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <info>
 	<infoitem key="UD_SanPham" value="name:MaSP;datatype:int,name:TenSP;datatype:varchar,name:MaNSX;datatype:int,name:MaLoai;datatype:int,name:HinhAnh;datatype:varchar,name:Gia;datatype:int,name:Tinhtrang;datatype:int,name:SoLuong;datatype:int,name:Loai;datatype:varchar,name:NSX;datatype:varchar" />
+	<infoitem key="UD_Count_SP" value="name:;datatype:int" />
 </info>

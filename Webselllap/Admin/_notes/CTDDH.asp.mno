@@ -1,4 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <info>
-	<infoitem key="UD_CTDDH" value="name:MaDDH;datatype:int,name:MaSP;datatype:int,name:SoLuong;datatype:int,name:TongTien;datatype:int,name:NgayLap;datatype:smalldatetime,name:TenSP;datatype:varchar,name:TinhTrang;datatype:date" />
+	<infoitem key="UD_CTDDH" value="name:MaDDH;datatype:int,name:MaSP;datatype:int,name:SoLuong;datatype:int,name:TongTien;datatype:int,name:TinhTrang;datatype:date" />
 </info>

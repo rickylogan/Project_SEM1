@@ -489,7 +489,7 @@ h3.m_4{
 h3.m_4 a{
 	color:#555;
 	text-transform:uppercase;
-	font-size:1em;
+	font-size:1.6em;
 }
 h3.m_4 a:hover{
 	color:#FFA540;
@@ -497,7 +497,7 @@ h3.m_4 a:hover{
 p.m_5{
 	text-align:center;
 	color:#999;
-	font-size:0.85em;
+	font-size:1.2em;
 }
 .view-first img {
    -webkit-transition: all 0.2s linear;
@@ -2626,4 +2626,19 @@ img:hover {
 }
 li:hover {
 	transform: translateY(-4px);
+}
+.oneItem
+{
+	width: 250px;
+	height: 300px;
+	margin-right: 20px;
+	margin-top: 20px;
+	float: left;
+	text-align:left;
+	
+}
+
+.link
+{
+	text-decoration:none;
 }

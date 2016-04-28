@@ -327,39 +327,37 @@ End If
 <div class="wrap"> 
     <div class="gocphaimanhinhTV">
 <%
-if Session("TKKH") = "" then
+if Session("name") = "" then
 	Response.write("<a rel=nofollow href=../login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=../login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
-	Response.write("<div style=margin-top:-20px class=cntr>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=../logout.asp class=colorlink2 <ins>Thoát<ins></a>")
-	Response.write("<div><p algin=right class=thongtincanhan><a href=../SuaTTCN.asp rel=nofollow class=colorlink><span><ins>Thông Tin Cá Nhân</ins></span></a></p></div>")
-	Response.write("<div style=margin-top:-45px class=cntr>")
+	
 end if
 %>
-    <!---------------------------
-                SEARCH
-    ---------------------------->
-		<div class="cntr-innr">
-              <form  action="../Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
-                    <input name="txtSearch" type="text" id="inpt_search" />
-                </form>
-                <p>Tìm kiếm</p>
-          </div>
-        </div>
-        <div>
-            <a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
-            <p> <% Response.Write(Session("dem")) %></p>
-        </div>
+	<div class="giohang">
+    	<a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
+        <p class="soluong"> <% Response.Write(Session("dem")) %></p>
+    </div>
 	</div>
 </div>
 
-<div class="pages-top">
-    <div class="logo">
-        <a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
-    </div>
-             
-		     <div class="h_menu4">
     <!---------------------------
+                SEARCH
+    ---------------------------->
+    <div class="cntr">
+        <div class="cntr-innr">
+          <label class="search" for="inpt_search">
+                <input id="inpt_search" type="text" />
+            </label>
+            <p>Sờ vào để tìm thứ bạn cần.</p>
+        </div>
+    </div>
+	<div class="pages-top">
+	        <div class="logo">
+				<a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
+			 </div>
+		     <div class="h_menu4">
+   <!---------------------------
                 MENU
     ---------------------------->
 				<ul class="nav">

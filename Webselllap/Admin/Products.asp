@@ -1,13 +1,26 @@
 <%@LANGUAGE="VBSCRIPT"  CODEPAGE="65001"%>
 <!--#include file="../Connections/Connection.asp" -->
 <%
+Dim Count_SP
+Dim Count_SP_cmd
+Dim Count_SP_numRows
+
+Set Count_SP_cmd = Server.CreateObject ("ADODB.Command")
+Count_SP_cmd.ActiveConnection = MM_Connection_STRING
+Count_SP_cmd.CommandText = "SELECT COUNT(MaSP) FROM dbo.SanPham WHERE Tinhtrang=1" 
+Count_SP_cmd.Prepared = true
+
+Set Count_SP = Count_SP_cmd.Execute
+Count_SP_numRows = 0
+%>
+<%
 Dim SanPham
 Dim SanPham_cmd
 Dim SanPham_numRows
 
 Set SanPham_cmd = Server.CreateObject ("ADODB.Command")
 SanPham_cmd.ActiveConnection = MM_Connection_STRING
-SanPham_cmd.CommandText = "SELECT a.MaSP, a.TenSP, a.MaNSX, a.MaLoai, a.HinhAnh, a.Gia, a.Tinhtrang, a.SoLuong, b.Loai, c.NSX FROM dbo.SanPham a, dbo.LoaiSP b, dbo.NSX c WHERE a.Tinhtrang=1 and a.MaLoai=b.MaLoai and a.MaNSX=c.MaNSX ORDER BY MaSP DESC" 
+SanPham_cmd.CommandText = "SELECT a.MaSP, a.TenSP, a.MaNSX, a.MaLoai, a.HinhAnh, a.Gia, a.Tinhtrang, a.SoLuong, b.Loai, c.NSX FROM dbo.SanPham a, dbo.LoaiSP b, dbo.NSX c WHERE a.Tinhtrang=1  and a.MaLoai=b.MaLoai and a.MaNSX=c.MaNSX ORDER BY MaSP DESC" 
 SanPham_cmd.Prepared = true
 
 Set SanPham = SanPham_cmd.Execute
@@ -16,22 +29,12 @@ SanPham_numRows = 0
 <%
 Dim Repeat1__numRows
 Dim Repeat1__index
-Dim Num_page
-Dim Page
-Page = 0
 
 Repeat1__numRows = 5
-Num_page = Repeat1__numRows + 0
+Dim Num_page
+Num_page = Repeat1__numRows
 Repeat1__index = 0
 SanPham_numRows = SanPham_numRows + Repeat1__numRows
-%>
-<%
-Dim Repeat2__numRows
-Dim Repeat2__index
-
-Repeat2__numRows = 5
-Repeat2__index = 0
-SanPham_numRows = SanPham_numRows + Repeat2__numRows
 %>
 <%
 '  *** Recordset Stats, Move To Record, and Go To Record: declare stats variables
@@ -267,7 +270,6 @@ Dim MM_moveFirst
 Dim MM_moveLast
 Dim MM_moveNext
 Dim MM_movePrev
-Dim MM_numPage
 
 Dim MM_urlStr
 Dim MM_paramList
@@ -311,6 +313,62 @@ Else
   MM_movePrev = MM_urlStr & CStr(MM_offset - MM_size)
 End If
 %>
+<%
+Dim Repeat00_numRows
+Dim Repeat00_index
+Dim Page
+Page = 0
+
+Repeat00_numRows = (Count_SP.Fields.Item("").Value)\Repeat1__numRows + 1
+Repeat00_index = 0
+Page_numRows = Page_numRows + Repeat00_numRows
+%>
+<%
+' *** Move To Record: if we dont know the record count, check the display range
+
+If (MM_rsCount_SP = -1) Then
+
+  ' walk to the end of the display range for this page
+  MM_index = MM_offset
+  While (Not MM_rs.EOF And (MM_size < 0 Or MM_index < MM_offset + MM_size))
+    MM_rs.MoveNext
+    MM_index = MM_index + 1
+  Wend
+
+  ' if we walked off the end of the recordset, set MM_rsCount_SP and MM_size
+  If (MM_rs.EOF) Then
+    MM_rsCount_SP = MM_index
+    If (MM_size < 0 Or MM_size > MM_rsCount_SP) Then
+      MM_size = MM_rsCount_SP
+    End If
+  End If
+
+  ' if we walked off the end, set the offset based on page size
+  If (MM_rs.EOF And Not MM_paramIsDefined) Then
+    If (MM_offset > MM_rsCount_SP - MM_size Or MM_offset = -1) Then
+      If ((MM_rsCount_SP Mod MM_size) > 0) Then
+        MM_offset = MM_rsCount_SP - (MM_rsCount_SP Mod MM_size)
+      Else
+        MM_offset = MM_rsCount_SP - MM_size
+      End If
+    End If
+  End If
+
+  ' reset the cursor to the beginning
+  If (MM_rs.CursorType > 0) Then
+    MM_rs.MoveFirst
+  Else
+    MM_rs.Requery
+  End If
+
+  ' move the cursor to the selected record
+  MM_index = 0
+  While (Not MM_rs.EOF And MM_index < MM_offset)
+    MM_rs.MoveNext
+    MM_index = MM_index + 1
+  Wend
+End If
+%>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -346,9 +404,9 @@ end if
 </div> <!-- /#front -->
 <div class="site-slider"></div>
 <div class="clear"></div>
-	<div align="center" class="form_menu">
-            <a href="AddSp.asp" class="colorlink">
-            <button type="submit" name=cmdSubmit>Thêm sản phẩm mới</button>
+<div align="center" class="form_menu">
+        <a href="AddSp.asp" class="colorlink">
+        <button type="submit" name=cmdSubmit>Thêm sản phẩm mới</button>
             </a>
     </div>
 	<div align="center" class="form_menu">
@@ -356,106 +414,101 @@ end if
             <button type="button" name=cmdSubmit>Xem đơn đặt hàng</button>
             </a>
     </div>
-<div class="product-item">
-  <table width="85%" border="0" cellspacing="0" cellpadding="0" align="center">
-    <% 
+<% 
 While ((Repeat1__numRows <> 0) AND (NOT SanPham.EOF)) 
 %>
-  <tr>
-    <td width="15%"><p><img src="<%=(SanPham.Fields.Item("HinhAnh").Value)%>" alt="" name="" width="225" height="150"></p></td>
-    <td width="35%"><p>&nbsp;</p>
-      <table width="80%" border="0" cellspacing="0" cellpadding="0" align="center">
-        <tr>
-          <td width="30%">Tên</td>
-          <td width="30%"> <%=(SanPham.Fields.Item("TenSP").Value)%></td>
-        </tr>
-        <tr>
-          <td> Loại</td>
-          <td><%=(SanPham.Fields.Item("Loai").Value)%></td>
-        </tr>
-        <tr>
-          <td>Hãng</td>
-          <td><%=(SanPham.Fields.Item("NSX").Value)%></td>
-        </tr>
-        <tr>
-          <td>Giá</td>
-          <td><%=(SanPham.Fields.Item("Gia").Value)%><em> <u>VNĐ</u></em></td>
-        </tr>
-        <tr>
-          <td>Số lượng</td>
-          <td><%=(SanPham.Fields.Item("SoLuong").Value)%> sản phẩm</td>
-        </tr>
-      </table>
-      <p></p>
-      <p>&nbsp;</p></td>
-    <td width="20%"><form action="Editsp.asp" method="post" name="form1" id="form1">
-      <input name="MaSP" type="hidden" id="MaSP" value="<%=(SanPham.Fields.Item("MaSP").Value)%>">
-      <input name="NSX" type="hidden" id="NSX" value="<%=(SanPham.Fields.Item("MaNSX").Value)%>">
-      <input name="Loai" type="hidden" id="Loai" value="<%=(SanPham.Fields.Item("MaLoai").Value)%>">
-      <button type="submit" name="button" id="button" value="CẬP NHẬT">CẬP NHẬT</button>
-    </form></td>
-    <td width="15%"><form action="Removesp.asp" method="post" name="form1" id="form1">
-      <input name="MaSp" type="hidden" id="MaSp" value="<%=(SanPham.Fields.Item("MaSP").Value)%>">
-      <button type="submit" name="button2" id="button2" value="XÓA">XÓA</button>
-    </form></td>
-  </tr>
+  <div class="product-item">
+    <table width="85%" border="0" cellspacing="0" cellpadding="0" align="center">
+      <tr>
+        <td width="15%"><p><img src="<%=(SanPham.Fields.Item("HinhAnh").Value)%>" alt="" name="" width="225" height="150"></p></td>
+        <td width="35%"><p>&nbsp;</p>
+          <table width="80%" border="0" cellspacing="0" cellpadding="0" align="center">
+            <tr>
+              <td width="30%">Tên</td>
+              <td width="30%"><%=(SanPham.Fields.Item("TenSP").Value)%></td>
+            </tr>
+            <tr>
+              <td> Loại</td>
+              <td><%=(SanPham.Fields.Item("Loai").Value)%></td>
+            </tr>
+            <tr>
+              <td>Hãng</td>
+              <td><%=(SanPham.Fields.Item("NSX").Value)%></td>
+            </tr>
+            <tr>
+              <td>Giá</td>
+              <td><%	x = SanPham.Fields.Item("Gia").Value
+		  		if len(x) mod 3 = 0 then
+		  			Response.Write(right(left(FormatCurrency(x),4*len(x)\3),- 1 + 4*len(x)\3))
+		  		else Response.Write(right(left(FormatCurrency(x),1+ 4*len(x)\3),0+ 4*len(x)\3))
+				end if
+			%>
+                <em> <u>VNĐ</u></em></td>
+            </tr>
+            <tr>
+              <td>Số lượng</td>
+              <td><%=(SanPham.Fields.Item("SoLuong").Value)%> sản phẩm</td>
+            </tr>
+          </table>
+          <p></p>
+          <p>&nbsp;</p></td>
+        <td width="20%"><form action="Editsp.asp" method="post" name="form1" id="form1">
+          <input name="MaSP" type="hidden" id="MaSP" value="<%=(SanPham.Fields.Item("MaSP").Value)%>">
+          <input name="NSX" type="hidden" id="NSX" value="<%=(SanPham.Fields.Item("MaNSX").Value)%>">
+          <input name="Loai" type="hidden" id="Loai" value="<%=(SanPham.Fields.Item("MaLoai").Value)%>">
+          <button type="submit" name="button" id="button" value="CẬP NHẬT">CẬP NHẬT</button>
+        </form></td>
+        <td width="15%"><form action="Removesp.asp" method="post" name="form1" id="form1">
+          <input name="MaSp" type="hidden" id="MaSp" value="<%=(SanPham.Fields.Item("MaSP").Value)%>">
+          <button type="submit" name="button2" id="button2" value="XÓA">XÓA</button>
+        </form></td>
+      </tr>
+    </table>
+  </div>
   <% 
   Repeat1__index=Repeat1__index+1
   Repeat1__numRows=Repeat1__numRows-1
   SanPham.MoveNext()
 Wend
 %>
-  </table>
-  
-        <span class="article-label">
-        <A HREF="<%=MM_moveFirst%>">
-            <button class="paging_left">
-                ◄◄&nbsp;&nbsp;<ins>TRANG ĐẦU</ins>
-            </button>
-        </A>
+<span class="pageProduct">
+	<div align="center">
         <A HREF="<%=MM_movePrev%>">
-            <button class="paging_left">
-                ◄&nbsp;&nbsp;&nbsp;<ins>TRƯỚC</ins>
-            </button>
+        <button class="paging_left"> ◄&nbsp;&nbsp;&nbsp;<ins>TRƯỚC</ins> </button>
         </A>
-		<A HREF="<%=MM_moveLast%>">
-            <button class="paging_right">
-                <ins>TRANG CUỐI</ins>&nbsp;&nbsp;►►
-            </button>
-        </A>
-        <A HREF="<%=MM_moveNext%>">
-        <button class="paging_right">
-                <ins>SAU</ins>&nbsp;&nbsp;&nbsp;►
-            </button>
-        </A>
-        <% 
-While ((Repeat2__numRows <> 0) AND (NOT SanPham.EOF)) 
-Page=Page+1
+<% 
+While ((Repeat00_numRows <> 0) AND (NOT SanPham.EOF)) 
 MM_numPage   = MM_urlStr & Page * Num_page
+Page=Page+1
 %>
 
   <A HREF="<%=MM_numPage%>">
     <button class="paging_mid"><%=Page%></button>
-    </A>
+</A>
   <% 
-  Repeat2__index=Repeat2__index+1
-  Repeat2__numRows=Repeat2__numRows-1
-  SanPham.MoveNext()
+  Repeat00_numRows=Repeat00_numRows-1
 Wend
 %>
-	</span>
+        <A HREF="<%=MM_moveNext%>">
+        <button class="paging_right"> <ins>SAU</ins>&nbsp;&nbsp;&nbsp;► </button>
+        </A>
+        </div>
+</span>
   </div>
 <script src="js/vendor/jquery-1.10.1.min.js"></script>
 <script src="js/plugins.js"></script>
 <script src="js/main.js"></script>
 <div class="footer-bar">
-    <span class="article-wrapper">
 	<span >
-        <span class="article-link"><a href="#" target="_top">Lên <ins>TOP▲</ins></a></span>
+        <span style="margin-left:20px;"><a href="#" target="_top">Lên <ins>TOP▲</ins></a></span>
     </span>
 </div>
 </body>
 </html>
+<%
+Count_SP.Close()
+Set Count_SP = Nothing
+%>
 <%
 SanPham.Close()
 Set SanPham = Nothing

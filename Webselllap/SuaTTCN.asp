@@ -11,19 +11,23 @@ End If
 Dim MM_abortEdit
 MM_abortEdit = false
 %>
+
+    <%
+		Content = ""							
+		QStr = Request.QueryString("TTCN")		
+	
+		if ucase(left(QStr,6))="CHANGE" then 
+			Title = "Đổi mật khẩu"
+		else
+			Title = "Thông tin cá nhân"
+		end if
+	%>
 <%
 If (CStr(Request("MM_update")) = "contact") Then
   If (Not MM_abortEdit) Then
     Dim MM_editCmd
     Set MM_editCmd = Server.CreateObject ("ADODB.Command")
-	if QStr="ChangeNP" then
-		MM_editCmd.ActiveConnection = MM_Connection_STRING
-		MM_editCmd.CommandText = "UPDATE dbo.KhachHang SET MatKhau = ? WHERE TKKH = ?" 
-		MM_editCmd.Prepared = true
-		MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param1", 201, 1, 50, Request.Form("txtNP")) ' adLongVarChar
-		MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param2", 200, 1, 50, Request.Form("MM_recordId")) ' adVarChar
-	else
-		Set MM_editCmd = Server.CreateObject ("ADODB.Command")
+	if QStr="EditTTCN" then
 		MM_editCmd.ActiveConnection = MM_Connection_STRING
 		MM_editCmd.CommandText = "UPDATE dbo.KhachHang SET TenKH = ?, DiaChi = ?, SDT = ? WHERE TKKH = ?" 
 		MM_editCmd.Prepared = true
@@ -31,6 +35,12 @@ If (CStr(Request("MM_update")) = "contact") Then
 		MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param2", 202, 1, 100, Request.Form("txtAddress")) ' adVarWChar
 		MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param3", 201, 1, 50, Request.Form("txtPhone")) ' adLongVarChar
 		MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param4", 200, 1, 50, Request.Form("MM_recordId")) ' adVarChar
+	else
+		MM_editCmd.ActiveConnection = MM_Connection_STRING
+		MM_editCmd.CommandText = "UPDATE dbo.KhachHang SET MatKhau = ? WHERE TKKH = ?" 
+		MM_editCmd.Prepared = true
+		MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param1", 201, 1, 50, Request.Form("txtNP")) ' adLongVarChar
+		MM_editCmd.Parameters.Append MM_editCmd.CreateParameter("param2", 200, 1, 50, Request.Form("MM_recordId")) ' adVarChar
 	end if
     MM_editCmd.Execute
     MM_editCmd.ActiveConnection.Close
@@ -38,7 +48,7 @@ If (CStr(Request("MM_update")) = "contact") Then
     MM_editRedirectUrl = "SuaTTCN.asp"
     If (Request.QueryString <> "") Then
       If (InStr(1, MM_editRedirectUrl, "?", vbTextCompare) = 0) Then
-        MM_editRedirectUrl = MM_editRedirectUrl & "?" & Request.QueryString
+        MM_editRedirectUrl = MM_editRedirectUrl & "?" & Request.QueryString & "completed"
       Else
         MM_editRedirectUrl = MM_editRedirectUrl & "&" & Request.QueryString
       End If
@@ -155,15 +165,7 @@ end if
                 	</dl>
             	</td>
                 <td valign="top">
-        <%
-	Content = ""							
-	QStr = Request.QueryString("TTCN")		
-
-	if ucase(left(QStr,6))="CHANGE" then 
-		Title = "Đổi mật khẩu"
-	else
-		Title = "Thông tin cá nhân"
-	end if
+    <%
 	if QStr="" then
 		Content = Content & "<div><table style='border-collapse:collapse; width:100%' border=1 bordercolor=#FF0000 cellpadding=5>"
 		Content = Content & "<tbody style=color:#FFF><tr>"
@@ -175,16 +177,18 @@ end if
 		Content = Content & "<td>" & KhachHang.Fields.Item("DiaChi").Value & "</td>"
 		Content = Content & "</tr><tr><td>Số Điện Thoại </td>"
 		Content = Content & "<td>" & KhachHang.Fields.Item("SDT").Value & "</td>"
-		Content = Content & "</tr></tbody></table></div>"
+		Content = Content & "</tr></tbody></table><p>Bạn muốn chỉnh sửa click  <a href=SuaTTCN.asp?TTCN=EditTTCN class=colorlink><ins>tại đây</ins></a></p></div>"
 	elseif QStr="EditTTCN" then
+		Session("NotiTT") = "Completed"
 		Content = Content & "<div><table style='border-collapse:collapse; width:100%' border=1 bordercolor=#FF0000 cellpadding=5><tr>"
-		Content = Content & "<form name=contact method=POST action=" & MM_editAction & ">"
+		Content = Content & "<form name=contact ACTION=" & MM_editAction & " method=POST id=contact Style=margin:0px>"
 		Content = Content & "<td width=120px>Họ và Tên </td><td><input type=text name=txtFullname value='" & KhachHang.Fields.Item("TenKH").Value & "' style=margin:0px required/></td></tr>"
 		Content = Content & "<tr><td>Địa Chỉ Email </td><td><input type=Email name=txtEmail readonly=readonly value='" & KhachHang.Fields.Item("Email").Value & "' style=margin:0px required/></td></td></tr>"
 		Content = Content & "<tr><td>Địa Chỉ Nhà </td><td><input type=text name=txtAddress value='" & KhachHang.Fields.Item("Diachi").Value & "' style=margin:0px required/></td></td></tr>"
 		Content = Content & "<tr><td>Số Điện Thoại</td><td><input type=tell name=txtPhone value=" & KhachHang.Fields.Item("SDT").Value & " style=margin:0px required/></td></td></tr>"
-		Content = Content & "</tbody></table><button type=submit name=cmdsubmit value=>Cập Nhật</button>"
-		Content = Content & "<input type=hidden name=MM_update value=contact /><input type=hidden name=MM_recordId value=" & KhachHang.Fields.Item("TKKH").Value & " /></form></div>"
+		Content = Content & "</table><button type=submit name=cmdsubmit value=>Cập Nhật</button>"
+		Content = Content & "<input type=hidden name=MM_update value=contact>"
+		Content = Content & "<input type=hidden name=MM_recordId value=" & KhachHang.Fields.Item("TKKH").Value & "></form></div>"
 	elseif QStr="ChangeOP" then
 		Content = Content & "<div><form ACTION=verify_dmk.asp name=form1 METHOD=POST Style=margin:0px>"
 		Content = Content & "<table style='border-collapse:collapse; width:100%' border=1 bordercolor=#FF0000 cellpadding=5>"
@@ -197,23 +201,30 @@ end if
 			Response.redirect("SuaTTCN.asp?TTCN=ChangeOP")
 		elseif Session("ConfirmMK") = "Confirmed" then
 			Session("ConfirmMK") = ""
-			Content = Content & "<div><form ACTION=" & MM_editAction & "completed method=POST name=contact id=contact Style=margin:0px>"
+			Session("NotiNP") = "Completed"
+			Content = Content & "<div><form ACTION=" & MM_editAction & " method=POST name=contact id=contact Style=margin:0px>"
 			Content = Content & "<table style='border-collapse:collapse; width:100%' border=1 bordercolor=#FF0000 cellpadding=5>"
 			Content = Content & "<tr><td>Mật khẩu mới</td>"
 			Content = Content & "<td><input minlength=6 id=txtNP name=txtNP type=password required /></td>"
-			Content = Content & "<tr><td>Nhập lại mật khẩu</td>"
+			Content = Content & "<tr><td>Nhập lại mật khẩu </td>"
 			Content = Content & "<td><input name=reNP type=password tabindex=3 required /></td></tr>"
 			Content = Content & "</table><button style=margin-left:50px type=submit name=cmdsubmit value=>Đồng Ý</button>"
 			Content = Content & "<input type=hidden name=MM_update value=contact>"
 			Content = Content & "<input type=hidden name=MM_recordId value=" & KhachHang.Fields.Item("TKKH").Value & "></form></div>"
-			Session("Noti") = "Completed"
 		end if
 	elseif QStr="ChangeNPcompleted" then
-		if	Session("Noti") = "" then
+		if	Session("NotiNP") = "" then
 			Response.redirect("SuaTTCN.asp")
-		elseif Session("Noti") = "Completed" then
+		else
 			Content = Content & "Bạn đã đổi mật khẩu thành công"
-			Session("Noti") = ""
+			Session("NotiNP") = ""
+		end if
+	elseif QStr="EditTTCNcompleted" then
+		if	Session("NotiTT") = "" then
+			Response.redirect("SuaTTCN.asp")
+		else
+			Content = Content & "Đã cập nhập thành công"
+			Session("NotiTT") = ""
 		end if
 	else
 		Content = Content & "<div><table style='border-collapse:collapse; width:100%' border=1 bordercolor=#FF0000 cellpadding=5>"
@@ -226,7 +237,7 @@ end if
 		Content = Content & "<td>" & KhachHang.Fields.Item("DiaChi").Value & "</td>"
 		Content = Content & "</tr><tr><td>Số Điện Thoại</td>"
 		Content = Content & "<td>" & KhachHang.Fields.Item("SDT").Value & "</td>"
-		Content = Content & "</tr></tbody></table></div>"		
+		Content = Content & "</tr></tbody></table><p>Bạn muốn chỉnh sửa click  <a href=SuaTTCN.asp?TTCN=EditTTCN class=colorlink><ins>tại đây</ins></a></p></div>"		
 	end if
 		%>
 		<%
@@ -235,9 +246,7 @@ end if
 				Response.Write(Content)
 		%>
         </div>
-        
-                  <p>Bạn muốn chỉnh sửa click  <a href=SuaTTCN.asp?TTCN=EditTTCN class="colorlink"><ins>tại đây</ins></a></p>
-                </td>  
+        	</td>  
         	</tr>
         </tbody>
      </table>

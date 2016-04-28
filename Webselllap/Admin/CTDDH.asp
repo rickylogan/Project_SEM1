@@ -2,9 +2,9 @@
 <!--#include file="../Connections/Connection.asp" -->
 <%
 Dim CTDDH__MMColParam
-CTDDH__MMColParam = "1"
-If (Request.Form("MaDDH") <> "") Then 
-  CTDDH__MMColParam = Request.Form("MaDDH")
+CTDDH__MMColParam = "1010"
+If (Request.Form("MaDDH")  <> "") Then 
+  CTDDH__MMColParam = Request.Form("MaDDH") 
 End If
 %>
 <%
@@ -14,12 +14,20 @@ Dim CTDDH_numRows
 
 Set CTDDH_cmd = Server.CreateObject ("ADODB.Command")
 CTDDH_cmd.ActiveConnection = MM_Connection_STRING
-CTDDH_cmd.CommandText = "SELECT a.MaDDH, a.MaSP, a.SoLuong, a.TongTien, a.NgayLap, a.TenSP, b.TinhTrang FROM dbo.CTDDH a, dbo.DonDatHang b WHERE a.MaDDH = ? and a.MaDDH = b.MaDDH" 
+CTDDH_cmd.CommandText = "SELECT a.MaDDH, a.MaSP, a.SoLuong, a.TongTien, b.TinhTrang FROM dbo.CTDDH a, dbo.DonDatHang b WHERE a.MaDDH = ? and b.MaDDH=a.MaDDH" 
 CTDDH_cmd.Prepared = true
 CTDDH_cmd.Parameters.Append CTDDH_cmd.CreateParameter("param1", 5, 1, -1, CTDDH__MMColParam) ' adDouble
 
 Set CTDDH = CTDDH_cmd.Execute
 CTDDH_numRows = 0
+%>
+<%
+Dim Repeat1__numRows
+Dim Repeat1__index
+
+Repeat1__numRows = -1
+Repeat1__index = 0
+CTDDH_numRows = CTDDH_numRows + Repeat1__numRows
 %>
 <!DOCTYPE HTML>
 <html>
@@ -49,6 +57,12 @@ else
 	
 end if
 %>
+<%
+Dim M_TinhTrang
+	M_TinhTrang = (CTDDH.Fields.Item("TinhTrang").Value)
+Dim Ma_DDH
+	Ma_DDH = (CTDDH.Fields.Item("MaDDH").Value)
+%>
 </div>
 <div id="top"><p class=title align=center>QUẢN LÝ SẢN PHẨM</p></div>
                          <!-- /.container -->
@@ -56,22 +70,21 @@ end if
 </div> <!-- /#front -->
 <div class="site-slider"></div>
 <div class="clear"></div>
-<table style="margin-top:30px" width="40%" border="2px" Bordercolor="black" cellspacing="0" cellpadding="100px" align="center">
-  	<tr>
+<% 
+While ((Repeat1__numRows <> 0) AND (NOT CTDDH.EOF)) 
+%>
+  <table style="margin-top:30px" width="40%" border="2px" Bordercolor="black" cellspacing="0" cellpadding="100px" align="center">
+    <tr>
       <td colspan="2" align="center"><b>CHI TIẾT ĐƠN ĐẶT HÀNG</b></td>
-	</tr>
+      </tr>
     <tr>
       <td width="20%">      Mã đơn đặt hàng</td>
       <td width="20%">      <%=(CTDDH.Fields.Item("MaDDH").Value)%></td>
-  </tr>
+    </tr>
     <tr>
       <td>      Mã sản phẩm</td>
       <td>      <%=(CTDDH.Fields.Item("MaSP").Value)%></td>
-  </tr>
-    <tr>
-      <td>      Tên sản phẩm</td>
-      <td>      <%=(CTDDH.Fields.Item("TenSP").Value)%></td>
-  </tr>
+    </tr>
     <tr>
       <td>      Số lượng</td>
       <td>      <%=(CTDDH.Fields.Item("SoLuong").Value)%></td>
@@ -80,28 +93,24 @@ end if
       <td>      Tổng tiền</td>
       <td>      <%=(CTDDH.Fields.Item("TongTien").Value)%></td>
       </tr>
-    <tr>
-      <td>      Ngày lập</td>
-      <td>      <%=(CTDDH.Fields.Item("NgayLap").Value)%></td>
-    </tr>
-  </table>
+    </table>
+  <% 
+  Repeat1__index=Repeat1__index+1
+  Repeat1__numRows=Repeat1__numRows-1
+  CTDDH.MoveNext()
+Wend
+%>
 <div style="margin-top:50px" align="center">
 	<a href="DDH.asp">
   <button type="button" name="button" id="button" value="">
   QUAY LẠI<br/>ĐƠN ĐẶT HÀNG</button>
-	</a>
+  </a>
 </div>
 <%
-	Dim M_TinhTrang
 	Content = ""
-	M_TinhTrang = (CTDDH.Fields.Item("TinhTrang").Value)
-	if M_TinhTrang = "Đã thanh toán       " then
 	Content = Content & "<div><form action='Confirm_EditTT.asp' method=post name=form1 id=form1>"
-	Content = Content & "<p><input name=MaDDH type=hidden id=MaDDH value=" & (CTDDH.Fields.Item("MaDDH").Value) & "></p>"
+	Content = Content & "<input name=MaDDH type=hidden id=MaDDH value=" & Ma_DDH & ">"
 	Content = Content & "<input style=float:right type=password name=txtPassword placeholder='MẬT KHẨU CẬP NHẬT LẠI TÌNH TRẠNG ĐƠN ĐẶT HÀNG' required></button></form></div>"
-	else
-	Content = Content & ""
-	End if
 	Response.Write(Content)
 %>
 <script src="js/vendor/jquery-1.10.1.min.js"></script>

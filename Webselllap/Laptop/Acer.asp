@@ -1,17 +1,17 @@
 ﻿<%@LANGUAGE="VBSCRIPT" CODEPAGE="65001"%>
 <!--#include file="../Connections/Connection.asp" -->
 <%
-Dim LAPTOP_ACER
-Dim LAPTOP_ACER_cmd
-Dim LAPTOP_ACER_numRows
+Dim LAPTOP
+Dim LAPTOP_cmd
+Dim LAPTOP_numRows
 
-Set LAPTOP_ACER_cmd = Server.CreateObject ("ADODB.Command")
-LAPTOP_ACER_cmd.ActiveConnection = MM_Connection_STRING
-LAPTOP_ACER_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE Tinhtrang = 1 and MaLoai = 1  and MaNSX = 7" 
-LAPTOP_ACER_cmd.Prepared = true
+Set LAPTOP_cmd = Server.CreateObject ("ADODB.Command")
+LAPTOP_cmd.ActiveConnection = MM_Connection_STRING
+LAPTOP_cmd.CommandText = "SELECT * FROM dbo.SanPham WHERE Tinhtrang = 1 and MaLoai = 1  and MaNSX = 7" 
+LAPTOP_cmd.Prepared = true
 
-Set LAPTOP_ACER = LAPTOP_ACER_cmd.Execute
-LAPTOP_ACER_numRows = 0
+Set LAPTOP = LAPTOP_cmd.Execute
+LAPTOP_numRows = 0
 %>
 <%
 Dim Repeat1__numRows
@@ -19,39 +19,39 @@ Dim Repeat1__index
 
 Repeat1__numRows = 9
 Repeat1__index = 0
-LAPTOP_ACER_numRows = LAPTOP_ACER_numRows + Repeat1__numRows
+LAPTOP_numRows = LAPTOP_numRows + Repeat1__numRows
 %>
 <%
 '  *** Recordset Stats, Move To Record, and Go To Record: declare stats variables
 
-Dim LAPTOP_ACER_total
-Dim LAPTOP_ACER_first
-Dim LAPTOP_ACER_last
+Dim LAPTOP_total
+Dim LAPTOP_first
+Dim LAPTOP_last
 
 ' set the record count
-LAPTOP_ACER_total = LAPTOP_ACER.RecordCount
+LAPTOP_total = LAPTOP.RecordCount
 
 ' set the number of rows displayed on this page
-If (LAPTOP_ACER_numRows < 0) Then
-  LAPTOP_ACER_numRows = LAPTOP_ACER_total
-Elseif (LAPTOP_ACER_numRows = 0) Then
-  LAPTOP_ACER_numRows = 1
+If (LAPTOP_numRows < 0) Then
+  LAPTOP_numRows = LAPTOP_total
+Elseif (LAPTOP_numRows = 0) Then
+  LAPTOP_numRows = 1
 End If
 
 ' set the first and last displayed record
-LAPTOP_ACER_first = 1
-LAPTOP_ACER_last  = LAPTOP_ACER_first + LAPTOP_ACER_numRows - 1
+LAPTOP_first = 1
+LAPTOP_last  = LAPTOP_first + LAPTOP_numRows - 1
 
 ' if we have the correct record count, check the other stats
-If (LAPTOP_ACER_total <> -1) Then
-  If (LAPTOP_ACER_first > LAPTOP_ACER_total) Then
-    LAPTOP_ACER_first = LAPTOP_ACER_total
+If (LAPTOP_total <> -1) Then
+  If (LAPTOP_first > LAPTOP_total) Then
+    LAPTOP_first = LAPTOP_total
   End If
-  If (LAPTOP_ACER_last > LAPTOP_ACER_total) Then
-    LAPTOP_ACER_last = LAPTOP_ACER_total
+  If (LAPTOP_last > LAPTOP_total) Then
+    LAPTOP_last = LAPTOP_total
   End If
-  If (LAPTOP_ACER_numRows > LAPTOP_ACER_total) Then
-    LAPTOP_ACER_numRows = LAPTOP_ACER_total
+  If (LAPTOP_numRows > LAPTOP_total) Then
+    LAPTOP_numRows = LAPTOP_total
   End If
 End If
 %>
@@ -72,9 +72,9 @@ Dim MM_paramIsDefined
 Dim MM_param
 Dim MM_index
 
-Set MM_rs    = LAPTOP_ACER
-MM_rsCount   = LAPTOP_ACER_total
-MM_size      = LAPTOP_ACER_numRows
+Set MM_rs    = LAPTOP
+MM_rsCount   = LAPTOP_total
+MM_size      = LAPTOP_numRows
 MM_uniqueCol = ""
 MM_paramName = ""
 MM_offset = 0
@@ -171,15 +171,15 @@ End If
 ' *** Move To Record: update recordset stats
 
 ' set the first and last displayed record
-LAPTOP_ACER_first = MM_offset + 1
-LAPTOP_ACER_last  = MM_offset + MM_size
+LAPTOP_first = MM_offset + 1
+LAPTOP_last  = MM_offset + MM_size
 
 If (MM_rsCount <> -1) Then
-  If (LAPTOP_ACER_first > MM_rsCount) Then
-    LAPTOP_ACER_first = MM_rsCount
+  If (LAPTOP_first > MM_rsCount) Then
+    LAPTOP_first = MM_rsCount
   End If
-  If (LAPTOP_ACER_last > MM_rsCount) Then
-    LAPTOP_ACER_last = MM_rsCount
+  If (LAPTOP_last > MM_rsCount) Then
+    LAPTOP_last = MM_rsCount
   End If
 End If
 
@@ -301,25 +301,13 @@ End If
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Cửa hàng máy tính | Desktop :: Groupfour</title>
+<title>Cửa hàng máy tính | Laptop :: Groupfour</title>
 <link rel="shortcut icon" href="../images/icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="../css/style.css" rel="stylesheet" type="text/css" media="all" />
-<link href="../css/myStyle.css" type="text/css" rel="stylesheet" >
 <link href='http://fonts.googleapis.com/css?family=Lato:400,300,600,700,800' rel='stylesheet' type='text/css'>
 <script src="../js/jquery.min.js"></script>
-
-        <!---------------------------
-                  LIGHTBOX
-        ---------------------------->
-<script type="text/javascript" src="../js/jquery.lightbox.js"></script>
-<link rel="stylesheet" type="text/css" href="../css/lightbox.css" media="screen" />
-  <script type="text/javascript">
-    $(function() {
-        $('.gallery a').lightBox();
-    });
-   </script>
 
 <style>HTML,BODY{cursor: url("../images/monkeyani.cur"), url("../images/monkey-ani.gif"), auto;}</style>
 </head>
@@ -327,35 +315,68 @@ End If
 <div class="wrap"> 
     <div class="gocphaimanhinhTV">
 <%
-if Session("name") = "" then
+if Session("TKKH") = "" then
 	Response.write("<a rel=nofollow href=../login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=../login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
+	Response.write("<div style=margin-top:-20px class=cntr>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=../logout.asp class=colorlink2 <ins>Thoát<ins></a>")
-	
+	Response.write("<div><p algin=right class=thongtincanhan><a href=../SuaTTCN.asp rel=nofollow class=colorlink><span><ins>Thông Tin Cá Nhân</ins></span></a></p></div>")
+	Response.write("<div style=margin-top:-45px class=cntr>")
 end if
 %>
-	<div class="giohang">
-    	<a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
-        <p class="soluong"> <% Response.Write(Session("dem")) %></p>
-    </div>
-	</div>
-</div>
-
     <!---------------------------
                 SEARCH
     ---------------------------->
-    <div class="cntr">
-        <div class="cntr-innr">
-          <label class="search" for="inpt_search">
-                <input id="inpt_search" type="text" />
-            </label>
-            <p>Sờ vào để tìm thứ bạn cần.</p>
+		<div class="cntr-innr">
+              <form  action="../Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
+                    <input name="txtSearch" type="text" id="inpt_search" />
+                </form>
+                <p>Tìm kiếm</p>
+          </div>
         </div>
+	</div>
+</div>
+            <!---------------------------
+                Giỏ hàng
+            ---------------------------->      
+        <link rel="stylesheet" type="text/css" href="../css/giohang.css" media="all" />
+        <div id="wrapper">
+          <div class="cart-tab visible">		
+            <a href="../HienThi.asp" title="Xem giỏ hàng của bạn" class="cart-link">
+              <span class="contents"><% if Session("dem")="" then Response.Write("0") else Response.Write(Session("dem"))%> sản phẩm</span>
+              <span class="amount">
+			  <%	if	Session("tongtien")="" or Session("tongtien")="0" then
+			  			Response.Write("0 ₫") 
+					elseif	x = Session("tongtien") then
+								if len(x) mod 3 = 0 then
+									Response.Write(right(left(FormatCurrency(x),4*len(x)\3),- 1 + 4*len(x)\3))
+								else Response.Write(right(left(FormatCurrency(x),1+ 4*len(x)\3),0+ 4*len(x)\3))
+								end if
+					end if %>
+               </span>
+            </a>
+            <div class="cart">
+              <h2 class="text_giohang">Giỏ hàng</h2>
+              <div class="cart-items">
+                <ul>
+                  <li class="clearfix">
+                    <img src="anh.jpg" class="productimg">
+                    <h4>Dark Hoodie</h4>
+                    <span class="item-price">$11.00</span>
+                    <span class="quantity">Số lượng: </span>
+                  </li>
+                </ul>
+              </div><!-- @end .cart-items -->
+              <a href="<%if session("TKKH")="" then response.Write("../ThongTinKHMoi.asp") else response.write("../ThongTinKHDangNhap.asp") end if %>" class="checkout">Thanh toán →</a>
+            </div><!-- @end .cart -->
+          </div>
+        </div>
+          <!-- End Giỏ hàng -->
+<div class="pages-top">
+    <div class="logo">
+        <a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
     </div>
-	<div class="pages-top">
-	        <div class="logo">
-				<a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
-			 </div>
+             
 		     <div class="h_menu4">
     <!---------------------------
                 MENU
@@ -470,32 +491,27 @@ end if
 				  <p>CÁC SẢN PHẨM LAPTOP ACER MỚI NHẤT</p>
 				  <p>&nbsp;</p>
                   <% 
-While ((Repeat1__numRows <> 0) AND (NOT LAPTOP_ACER.EOF)) 
+While ((Repeat1__numRows <> 0) AND (NOT LAPTOP.EOF)) 
 %>
   <div class="oneItem">
-    <p><img src="<%=(LAPTOP_ACER.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150">Sản phẩm: <%=(LAPTOP_ACER.Fields.Item("TenSP").Value)%></p>
-    <p>Giá: <%=(LAPTOP_ACER.Fields.Item("Gia").Value)%></p>
-    <p>Hiện còn <%=(LAPTOP_ACER.Fields.Item("SoLuong").Value)%> sản phẩm</p>
-    <p>&nbsp;</p>
-    <form name="form1" method="post" action="ctspLaptop.asp">
-      <input name="MaSP" type="hidden" id="MaSP" value="<%=(LAPTOP_ACER.Fields.Item("MaSP").Value)%>">
-      <label>
-        <input type="submit" name="btnchitiet" id="btnchitiet" value="Xem chi tiết sản phẩm...">
-      </label>
-    </form>
-    
+    <p align="center"><a href="ctspLaptop.asp?<%=(LAPTOP.Fields.Item("MaSP").Value)%>"><img src="<%=(LAPTOP.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"></a></p>
+    <p><%=(LAPTOP.Fields.Item("TenSP").Value)%></p>
+    <p>Giá: <%	x = LAPTOP.Fields.Item("Gia").Value
+		  		if len(x) mod 3 = 0 then
+		  			Response.Write(right(left(FormatCurrency(x),4*len(x)\3),- 1 + 4*len(x)\3))
+		  		else Response.Write(right(left(FormatCurrency(x),1+ 4*len(x)\3),0+ 4*len(x)\3))
+				end if
+			%><strong><em> <u>VNĐ</u></em></strong></p>
+    <p>Hiện còn <strong><%=(LAPTOP.Fields.Item("SoLuong").Value)%></strong> sản phẩm</p>
+    <p>&nbsp;</p>    
   </div>
   
 <% 
   Repeat1__index=Repeat1__index+1
   Repeat1__numRows=Repeat1__numRows-1
-  LAPTOP_ACER.MoveNext()
+  LAPTOP.MoveNext()
 Wend
 %>
-             <div style="margin-top:10px; margin-bottom:10px; float:left">
-              <p>&nbsp;<A HREF="<%=MM_moveFirst%>">&lt;&lt;Trang đầu </A><A HREF="<%=MM_movePrev%>">&lt;&lt;Trước </A>**** <A HREF="<%=MM_moveNext%>">Tiếp&gt;&gt;</A> <A HREF="<%=MM_moveLast%>">Trang cuối&gt;&gt;</A></p>
-              </div>
-
               </div>
               
   
@@ -564,13 +580,14 @@ Wend
 			</ul>
 		   </div>
 	   </div>
-		   <div class="clear"></div>	
-</div>
-		  </div>
-</div>
+		   <div class="clear"></div>
+    <div style="margin-left:300px;">
+              <p>&nbsp;<A HREF="<%=MM_moveFirst%>" class="colorlink3">&lt;&lt;Trang đầu</A>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<A HREF="<%=MM_movePrev%>" class="colorlink3">&lt;Trước </A>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<A HREF="<%=MM_moveNext%>" class="colorlink3">Tiếp&gt;</A>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<A HREF="<%=MM_moveLast%>" class="colorlink3">Trang cuối&gt;&gt;</A></p>
+    </div>
+</div>	
 <!---------------------------
                 BOTTOM
-    ---------------------------->
+---------------------------->
         <div class="footer">
 			<div class="wrap">
 				<div class="footer-grid footer-grid1">
@@ -656,6 +673,6 @@ Wend
 </body>
 </html>
 <%
-LAPTOP_ACER.Close()
-Set LAPTOP_ACER = Nothing
+LAPTOP.Close()
+Set LAPTOP = Nothing
 %>

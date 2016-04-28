@@ -185,7 +185,7 @@ end if
 					<li class="active"><a href="../Phukien/Phukien.asp">Phụ kiện</a>
 						
 					</li>
-					<li><a href="Lienhe/Lienhe.asp">Liên hệ</a></li>
+					<li><a href="../Lienhe/Lienhe.asp">Liên hệ</a></li>
 				</ul>
 <script type="text/javascript" src="../js/nav.js"></script>
 			</div>

@@ -22,7 +22,7 @@ Function MM_IIf(condition, ifTrue, ifFalse)
 End Function
 %>
 <%
-If (CStr(Request("MM_update")) = "form2") Then
+If (CStr(Request("MM_update")) = "form1") Then
   If (Not MM_abortEdit) Then
     ' execute the update
     Dim MM_editCmd
@@ -64,11 +64,26 @@ Set DDH = DDH_cmd.Execute
 DDH_numRows = 0
 %>
 <%
+Dim Count_DDH
+Dim Count_DDH_cmd
+Dim Count_DDH_numRows
+
+Set Count_DDH_cmd = Server.CreateObject ("ADODB.Command")
+Count_DDH_cmd.ActiveConnection = MM_Connection_STRING
+Count_DDH_cmd.CommandText = "SELECT COUNT(MaDDH) FROM dbo.DonDatHang" 
+Count_DDH_cmd.Prepared = true
+
+Set Count_DDH = Count_DDH_cmd.Execute
+Count_DDH_numRows = 0
+%>
+<%
 Dim Repeat1__numRows
 Dim Repeat1__index
 
-Repeat1__numRows = -1
+Repeat1__numRows = 4
 Repeat1__index = 0
+Dim Num_page
+Num_page = Repeat1__numRows
 DDH_numRows = DDH_numRows + Repeat1__numRows
 %>
 <%
@@ -297,6 +312,16 @@ Function MM_joinChar(firstItem)
 End Function
 %>
 <%
+Dim Repeat00_numRows
+Dim Repeat00_index
+Dim Page
+Page = 0
+
+Repeat00_numRows = (Count_DDH.Fields.Item("").Value)\Repeat1__numRows + 1
+Repeat00_index = 0
+Page_numRows = Page_numRows + Repeat00_numRows
+%>
+<%
 ' *** Move To Record: set the strings for the first, last, next, and previous links
 
 Dim MM_keepMove
@@ -359,7 +384,7 @@ End If
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/normalize.min.css">
     <link rel="stylesheet" href="css/templatemo_style.css">
- <script src="../js/jquery.min.js"></script>
+<script src="../js/jquery.min.js"></script>
 </head>
 <body>
 <div class="site-header">
@@ -427,13 +452,13 @@ While ((Repeat1__numRows <> 0) AND (NOT DDH.EOF))
 	  if M_TinhTrang ="Đã thanh toán       " then
 	  Content = Content & "</table><div style=margin-top:65px align=right><form action=CTDDH.asp method=post name=form1 id=form1> <p><input name=MaDDH type=hidden id=MaDDH value=" & DDH.Fields.Item("MaDDH").Value & "></p><button type=submit name=button id=button value=>XEM CHI TIẾT</button></form>"
 	  else
-	  Content = Content & "<tr><td colspan=2 align=center><form name=form2 method=POST action=" & MM_editAction & ">"
+	  Content = Content & "<tr><td colspan=2 align=center><form name=form1 method=POST action=" & MM_editAction & ">"
 	  Content = Content & "<input name=TinhTrang type=hidden id=TinhTrang value='Đã thanh toán'>"
 	  Content = Content & "<button type=submit name=button2 id=button2 value=>XÁC NHẬN THANH TOÁN</button>"
-	  Content = Content & "<input type=hidden name=MM_update value=form2>"
-	  Content = Content & "<input type=hidden name=MM_recordId value="& DDH.Fields.Item("MaDDH").Value & ">"
+	  Content = Content & "<input type=hidden name=MM_update value=form1>"
+	  Content = Content & "<input type=hidden name=MM_recordId value="& (DDH.Fields.Item("MaDDH").Value) & ">"
 	  Content = Content & "</form></td></tr>"
-	  Content = Content & "</table><div align=right><form action=CTDDH.asp method=post name=form1 id=form1> <p><input name=MaDDH type=hidden id=MaDDH value=" & DDH.Fields.Item("MaDDH").Value & "></p><button type=submit name=button id=button value=>XEM CHI TIẾT</button></form>"
+	  Content = Content & "</table><div align=right><form action=CTDDH.asp method=post name=form2 id=form2> <p><input name=MaDDH type=hidden id=MaDDH value=" & (DDH.Fields.Item("MaDDH").Value) & "></p><button type=submit name=button id=button value=>XEM CHI TIẾT</button></form>"
 	  end if
 	  Response.Write(Content)
 	  %>
@@ -445,32 +470,34 @@ While ((Repeat1__numRows <> 0) AND (NOT DDH.EOF))
   DDH.MoveNext()
 Wend
 %>
-	<div>
-        <A HREF="<%=MM_moveFirst%>">
-            <button class="paging_left">
-                ◄◄&nbsp;&nbsp;<ins>TRANG ĐẦU</ins>
-            </button>
-        </A>
+<span class="pageDDH">
         <A HREF="<%=MM_movePrev%>">
-            <button class="paging_left">
-                ◄&nbsp;&nbsp;&nbsp;<ins>TRƯỚC</ins>
-            </button>
+        <button class="paging_left"> ◄&nbsp;&nbsp;&nbsp;<ins>TRƯỚC</ins> </button>
         </A>
-        <A HREF="<%=MM_moveLast%>">
-            <button class="paging_right">
-                <ins>TRANG CUỐI</ins>&nbsp;&nbsp;►►
-            </button>
-        </A>
+<% 
+While ((Repeat00_numRows <> 0) AND (NOT DDH.EOF)) 
+MM_numPage   = MM_urlStr & Page * Num_page
+Page=Page+1
+%>
+
+  <A HREF="<%=MM_numPage%>">
+    <button class="paging_mid"><%=Page%></button>
+</A>
+  <% 
+  Repeat00_numRows=Repeat00_numRows-1
+Wend
+%>
         <A HREF="<%=MM_moveNext%>">
-            <button class="paging_right">
-                <ins>SAU</ins>&nbsp;&nbsp;&nbsp;►
-            </button>
+        <button class="paging_right"> <ins>SAU</ins>&nbsp;&nbsp;&nbsp;► </button>
         </A>
-	</div>
+</span>
+  </div>
+<script src="js/vendor/jquery-1.10.1.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
 <div class="footer-bar">
-    <span class="article-wrapper">
-        <span class="article-label">Trang quản lý</span>
-        <span class="article-link"><a href="#">Lên <ins>TOP▲</ins></a></span>
+	<span >
+        <span  style="margin-left:20px;"><a href="#" target="_top">Lên <ins>TOP▲</ins></a></span>
     </span>
 </div>
 </body>
@@ -478,4 +505,8 @@ Wend
 <%
 DDH.Close()
 Set DDH = Nothing
+%>
+<%
+Count_DDH.Close()
+Set Count_DDH = Nothing
 %>

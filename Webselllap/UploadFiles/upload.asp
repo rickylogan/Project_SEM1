@@ -68,9 +68,9 @@ Class ASPForm
 		adoVersion = CSng(Replace(Conn.Version,".",","))
 		set Conn = Nothing
 		if adoVersion < 2.5 then
-			Response.Write "<b>You don't have ADO 2.5 installed on the server.</b><br/>"
-			Response.Write "The Asp Upload extension needs ADO 2.5 or greater to run properly.<br/>"
-			Response.Write "You can download the latest MDAC (ADO is included) from <a href=""www.microsoft.com/data"">www.microsoft.com/data</a><br/>"
+			Response.Write "<b>Bạn không có ADO 2.5 được cài trên server.</b><br/>"
+			Response.Write "Tiện ích Asp Upload cần ADO 2.5 hoặc cao hơn để xử lý.<br/>"
+			Response.Write "Bạn cần tải MDAC mới nhất (ADO là thư viện) từ <a href=""www.microsoft.com/data"">www.microsoft.com/data</a><br/>"
 			Response.End
 		end if
 	
@@ -415,7 +415,7 @@ Class cFormFields
 					'response.write "-s " & GetValByName("FileSize",Item.FieldName) & "<br>"
 					if not RG_VerifyLen(Item.Length,GetValByName("FileSize",Item.FieldName)) then
 						FileSave = false
-						UploadMailError = "Files not send - One or more files exceed size limit"
+						UploadMailError = "Những tập tin không gửi được  - One or more files exceed size limit"
 						exit for
 					end if
 				End If
@@ -424,7 +424,7 @@ Class cFormFields
 		if UploadType = "AdvancedMail" and NoSendFileExceed = "1" and TotalFileSize <> 0 and FileSave then
 			if not RG_VerifyLen(UploadedSize, TotalFileSize) then
 				FileSave = false
-				UploadMailError = "Files not send - Exceed total size limit"
+				UploadMailError = "Những tập tin không gửi được - Exceed total size limit"
 			end if
 		end if
 		'response.write "-" & UploadType & "<br>"
@@ -501,7 +501,7 @@ Class cFormFields
 				RG_editQuery = replace(replace(RG_editQuery,"[","`"),"]","`")
 				Conn.execute (RG_editQuery)
 				if err.number<>0 then
-					response.write "I find an error in the sql:<br>" & replace(replace(RG_editQuery,"`",""),"`","") & "<br>" & "I find this error: " & FirstError
+					response.write "Xuất hiện lỗi ở SQL:<br>" & replace(replace(RG_editQuery,"`",""),"`","") & "<br>" & "Lỗi tìm thấy: " & FirstError
 					response.end
 				end if
 			end if
@@ -619,7 +619,7 @@ Class cFormFields
 					RG_editQuery = replace(replace(RG_editQuery,"[","`"),"]","`")
 					Conn.execute (RG_editQuery)
 					if err.number<>0 then
-						response.write "I find an error in the sql:<br>" & replace(replace(RG_editQuery,"`",""),"`","")  & "<br>" & "I find this error: " & FirstError
+						response.write "Xuất hiện lỗi ở SQL:<br>" & replace(replace(RG_editQuery,"`",""),"`","")  & "<br>" & "Lỗi tìm thấy: " & FirstError
 						response.end
 					end if
 				end if

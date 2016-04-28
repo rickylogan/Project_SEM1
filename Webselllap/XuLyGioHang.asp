@@ -4,13 +4,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
+<title>Xử lý giỏ hàng</title>
 
 </head>
 <body>
 	<%
 	Dim ngaylap
-	ngaylap = date	
+	ngaylap = date
 	Dim maddh
 	Dim dem
 	Dim kq
@@ -50,7 +50,7 @@
 	else
 		Response.Write("KH Đã có TK")
 		'Tao hoa don	
-		editCmd.CommandText = "insert into DonDatHang values('"&Session("name")&"',"&Session("tongtien")&",'"&ngaylap&"')"
+		editCmd.CommandText = "insert into DonDatHang values('" & Session("TKKH") & "','"&ngaylap&"'," & Session("tongtien") & ",N'Chưa thanh toán')"
 		editCmd.Prepared = true
 		editCmd.execute
 		
@@ -63,7 +63,7 @@
 		dem = Session("dem")
 		q = Session("giohang")
 		for i = 0 to dem - 1
-			editCmd.CommandText = "insert into CTDDH values("&maddh&", "&q(i,0)&","&q(i,3)&", "&q(i,4)&")"
+			editCmd.CommandText = "insert into CTDDH values("&maddh&", "&q(i,0)&","&q(i,3)&", "&q(i,4)&")" & "UPDATE SanPham SET SoLuong = SoLuong - " & q(i,3) & " WHERE MaSP = " & q(i,0)
 			editCmd.execute
 		next
 		Session("dem") = 0

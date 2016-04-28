@@ -193,7 +193,6 @@ end if
 	 	<div class="wrap">
 	 		<div class="pages">
 	 		  <div class="cont1 span_2_of_g1">
-              <div  align="center">
 		      <p>QUÝ KHÁCH ĐANG XEM SẢN PHẨM</p>
 		      <p><%=(CTSPDESKTOP.Fields.Item("TenSP").Value)%></p>
 			    <p><img src="<%=(CTSPDESKTOP.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"></p>
@@ -219,15 +218,15 @@ end if
 				 
 				  <div>
 				  <form name="form2" method="post" action="../giohang.asp">
-				    <label style="float:right">
-				      <Button type="image" name="imageField" id="imageField"><img src="../Images/Giohang_index.png" width="60" height="51"><p>Đặt hàng</p></Button>
+				    <label>
+				      <input type="image" name="imageField" id="imageField" src="../Images/giohang.jpg" width="100" height="50">
 				    </label>
+				    Mua hàng
                     <input name="MaSPDatHang" type="hidden" id="MaSPDatHang" value="<%=(CTSPDESKTOP.Fields.Item("MaSP").Value)%>">
                     <input name="TenSP" type="hidden" id="TenSP" value="<%=(CTSPDESKTOP.Fields.Item("TenSP").Value)%>">
 				  <input name="HinhAnh" type="hidden" id="HinhAnh" value="<%=(CTSPDESKTOP.Fields.Item("HinhAnh").Value)%>">
 				  <input name="Gia" type="hidden" id="Gia" value="<%=(CTSPDESKTOP.Fields.Item("Gia").Value)%>">
 				  </form>
-                  </div>
 			    </div>
 				  <div style="clear:both; text-align:center">
 				    

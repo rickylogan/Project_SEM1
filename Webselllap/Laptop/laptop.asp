@@ -301,25 +301,13 @@ End If
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Cửa hàng máy tính | Desktop :: Groupfour</title>
+<title>Cửa hàng máy tính | Laptop :: Groupfour</title>
 <link rel="shortcut icon" href="../images/icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="../css/style.css" rel="stylesheet" type="text/css" media="all" />
-<link href="../css/myStyle.css" type="text/css" rel="stylesheet" >
 <link href='http://fonts.googleapis.com/css?family=Lato:400,300,600,700,800' rel='stylesheet' type='text/css'>
 <script src="../js/jquery.min.js"></script>
-
-        <!---------------------------
-                  LIGHTBOX
-        ---------------------------->
-<script type="text/javascript" src="../js/jquery.lightbox.js"></script>
-<link rel="stylesheet" type="text/css" href="../css/lightbox.css" media="screen" />
-  <script type="text/javascript">
-    $(function() {
-        $('.gallery a').lightBox();
-    });
-   </script>
 
 <style>HTML,BODY{cursor: url("../images/monkeyani.cur"), url("../images/monkey-ani.gif"), auto;}</style>
 </head>
@@ -346,13 +334,44 @@ end if
                 <p>Tìm kiếm</p>
           </div>
         </div>
-        <div>
-            <a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
-            <p> <% Response.Write(Session("dem")) %></p>
-        </div>
 	</div>
 </div>
-
+            <!---------------------------
+                Giỏ hàng
+            ---------------------------->      
+        <link rel="stylesheet" type="text/css" href="../css/giohang.css" media="all" />
+        <div id="wrapper">
+          <div class="cart-tab visible">		
+            <a href="../HienThi.asp" title="Xem giỏ hàng của bạn" class="cart-link">
+              <span class="contents"><% if Session("dem")="" then Response.Write("0") else Response.Write(Session("dem"))%> sản phẩm</span>
+              <span class="amount">
+			  <%	if	Session("tongtien")="" or Session("tongtien")="0" then
+			  			Response.Write("0 ₫") 
+					elseif	x = Session("tongtien") then
+								if len(x) mod 3 = 0 then
+									Response.Write(right(left(FormatCurrency(x),4*len(x)\3),- 1 + 4*len(x)\3))
+								else Response.Write(right(left(FormatCurrency(x),1+ 4*len(x)\3),0+ 4*len(x)\3))
+								end if
+					end if %>
+               </span>
+            </a>
+            <div class="cart">
+              <h2 class="text_giohang">Giỏ hàng</h2>
+              <div class="cart-items">
+                <ul>
+                  <li class="clearfix">
+                    <img src="anh.jpg" class="productimg">
+                    <h4>Dark Hoodie</h4>
+                    <span class="item-price">$11.00</span>
+                    <span class="quantity">Số lượng: </span>
+                  </li>
+                </ul>
+              </div><!-- @end .cart-items -->
+              <a href="<%if session("TKKH")="" then response.Write("../ThongTinKHMoi.asp") else response.write("../ThongTinKHDangNhap.asp") end if %>" class="checkout">Thanh toán →</a>
+            </div><!-- @end .cart -->
+          </div>
+        </div>
+          <!-- End Giỏ hàng -->
 <div class="pages-top">
     <div class="logo">
         <a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
@@ -477,8 +496,14 @@ While ((Repeat1__numRows <> 0) AND (NOT LAPTOP.EOF))
   <div class="oneItem">
     <p><a href="ctspLaptop.asp?<%=(LAPTOP.Fields.Item("MaSP").Value)%>"><img src="<%=(LAPTOP.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"></a></p>
     <p>Sản phẩm: <%=(LAPTOP.Fields.Item("TenSP").Value)%></p>
-    <p>Giá: <%=(LAPTOP.Fields.Item("Gia").Value)%></p>
+    <p>Giá: <%	x = LAPTOP.Fields.Item("Gia").Value
+		  		if len(x) mod 3 = 0 then
+		  			Response.Write(right(left(FormatCurrency(x),4*len(x)\3),- 1 + 4*len(x)\3))
+		  		else Response.Write(right(left(FormatCurrency(x),1+ 4*len(x)\3),0+ 4*len(x)\3))
+				end if
+			%><strong><em> <u>VND</u></em></strong></p>
     <p>Hiện còn <%=(LAPTOP.Fields.Item("SoLuong").Value)%> sản phẩm</p>
+    <p>&nbsp;</p>
   </div>
   
 <% 
@@ -487,11 +512,6 @@ While ((Repeat1__numRows <> 0) AND (NOT LAPTOP.EOF))
   LAPTOP.MoveNext()
 Wend
 %>
-<br>
-             <div style="margin-top:10px; margin-bottom:10px; float:left">
-              <p>&nbsp;<A HREF="<%=MM_moveFirst%>">&lt;&lt;Trang đầu </A><A HREF="<%=MM_movePrev%>">&lt;&lt;Trước </A>**** <A HREF="<%=MM_moveNext%>">Tiếp&gt;&gt;</A> <A HREF="<%=MM_moveLast%>">Trang cuối&gt;&gt;</A></p>
-              </div>
-
               </div>
               
   
@@ -560,13 +580,14 @@ Wend
 			</ul>
 		   </div>
 	   </div>
-		   <div class="clear"></div>	
-</div>
-		  </div>
-</div>
+		   <div class="clear"></div>
+    <div style="margin-left:300px;">
+              <p>&nbsp;<A HREF="<%=MM_moveFirst%>" class="colorlink3">&lt;&lt;Trang đầu</A>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<A HREF="<%=MM_movePrev%>" class="colorlink3">&lt;Trước </A>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<A HREF="<%=MM_moveNext%>" class="colorlink3">Tiếp&gt;</A>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<A HREF="<%=MM_moveLast%>" class="colorlink3">Trang cuối&gt;&gt;</A></p>
+    </div>
+</div>	
 <!---------------------------
                 BOTTOM
-    ---------------------------->
+---------------------------->
         <div class="footer">
 			<div class="wrap">
 				<div class="footer-grid footer-grid1">

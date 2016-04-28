@@ -53,9 +53,9 @@ End If
 %>
 <%
 Dim DDH__MMColParam
-DDH__MMColParam = "1"
-If (Session("MaDDH") <> "") Then 
-  DDH__MMColParam = Session("MaDDH")
+DDH__MMColParam = "1007"
+If (Session("MaDDH")  <> "") Then 
+  DDH__MMColParam = Session("MaDDH") 
 End If
 %>
 <%
@@ -65,7 +65,7 @@ Dim DDH_numRows
 
 Set DDH_cmd = Server.CreateObject ("ADODB.Command")
 DDH_cmd.ActiveConnection = MM_Connection_STRING
-DDH_cmd.CommandText = "SELECT * FROM dbo.DonDatHang WHERE MaDDH = ?" 
+DDH_cmd.CommandText = "SELECT a.MaDDH, a.TKKH, a.NgayDat,a. TongTien, a.TinhTrang, b.SoLuong, b.MaSP FROM dbo.DonDatHang a, dbo.CTDDH b WHERE a.MaDDH = ? and b.MaDDH=a.MaDDH" 
 DDH_cmd.Prepared = true
 DDH_cmd.Parameters.Append DDH_cmd.CreateParameter("param1", 5, 1, -1, DDH__MMColParam) ' adDouble
 
@@ -92,7 +92,7 @@ DDH_numRows = 0
   </div>
             <div class="container">
 <div class="gocphaimanhinhTV">
-<%
+  <%
 if Session("TKA") = ""  then
 	Response.Redirect("loginAD.asp")
 elseif Session("confirm")="" then 
@@ -147,12 +147,19 @@ end if
 	  Content = ""
 	  if M_TinhTrang ="Chưa thanh toán     " then
 	  Content = Content & ""
+	  Content = Content & "<tr><td colspan=2 align=center><form name=form2 method=POST action='HuyDDH.asp'>"
+	  Content = Content & "<input type=hidden name=SoLuong id=SoLuong value='+ " & (DDH.Fields.Item("SoLuong").Value) & "'>"
+	  Content = Content & "<input type=hidden name=MaSP id=MaSP value='+ " & (DDH.Fields.Item("MaSP").Value) & "'>"
+	  Content = Content & "<button type=submit name=button2 id=button2 value=>HỦY ĐƠN ĐẶT HÀNG</button>"
+	  Content = Content & "<input type=hidden name=MM_update2 value=form2>"
+	  Content = Content & "<input type=hidden name=MaDDH id=MaDDH value='+ " & (DDH.Fields.Item("MaDDH").Value) & "'>"
+	  Content = Content & "</form></td></tr>"
 	  else
 	  Content = Content & "<tr><td colspan=2 align=center><form name=form2 method=POST action=" & MM_editAction & ">"
 	  Content = Content & "<input name=TinhTrang type=hidden id=TinhTrang value='Chưa thanh toán'>"
 	  Content = Content & "<button type=submit name=button2 id=button2 value=>CHƯA THANH TOÁN</button>"
 	  Content = Content & "<input type=hidden name=MM_update value=form2>"
-	  Content = Content & "<input type=hidden name=MM_recordId value="& DDH.Fields.Item("MaDDH").Value & ">"
+	  Content = Content & "<input type=hidden name=MM_recordId value='" & DDH.Fields.Item("MaDDH").Value & "'>"
 	  Content = Content & "</form></td></tr>"
 	  end if
 	  Response.Write(Content)

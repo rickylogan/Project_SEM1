@@ -875,13 +875,12 @@ button:hover {
 }
 .paging_left
 {
-	margin: 20px 20px 0 10px;
-	float: left;
+	margin: 20px 20px 0 200px;
   border: none;
   background: #cad4e9;
   cursor: pointer;
   border-radius: 3px;
-  padding: 12px 25px 12px 15px;
+  padding: 10px;
   color: Black;
   font-size:12pt;
   box-shadow: 2px 3px 2px 2px #9e9fa1;
@@ -889,26 +888,34 @@ button:hover {
 .paging_mid
 {
 	margin: 20px 10px 50px 0px;
-	float: left;
   border: none;
   background: #cad4e9;
   cursor: pointer;
   border-radius: 3px;
-  padding: 15px;
+  padding: 10px;
   color: Black;
   font-size:12pt;
   box-shadow: 2px 3px 2px 2px #9e9fa1;
 }
 .paging_right
 {
-	margin: 20px 40px 50px 30px;
-	float: right;
+	margin: 20px 200px 50px 30px;
   border: none;
   background: #cad4e9;
   cursor: pointer;
   border-radius: 3px;
-  padding: 12px 15px 12px 25px;
+  padding: 10px;
   color: Black;
   font-size:12pt;
   box-shadow: 2px 3px 2px 2px #9e9fa1;
+}
+.pageDDH{
+	position:fixed;
+	top:35em;
+  z-index: 1;
+  display: block;
+   right:0;
+}
+.pageProduct{
+	position:fixed; top:35em; right:0; z-index:1; display:block;
 }

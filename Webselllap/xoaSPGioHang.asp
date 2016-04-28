@@ -12,12 +12,35 @@
 		dem = Session("dem")
 		Dim q
 		q = Session("giohang")
+		Dim tongtien
+		tongtien = Session("tongtien")
 		Dim n
 		n = Request.QueryString
-		Response.Write(q(n,1))
-				
-		dem = dem
+		
+		tongtien = tongtien - (q(n, 3) * q(n, 4))
+		
+		for k = 0 to n - 1
+			q(k, 0) = q(k, 0)
+			q(k, 1) = q(k, 1)
+			q(k, 2) = q(k, 2)
+			q(k, 3) = q(k, 3)
+			q(k, 4) = q(k, 4)			
+		next
+		
+		for k = n to dem - 1
+			q(k, 0) = q(k + 1, 0)
+			q(k, 1) = q(k + 1, 1)
+			q(k, 2) = q(k + 1, 2)
+			q(k, 3) = q(k + 1, 3)
+			q(k, 4) = q(k + 1, 4)	
+		next 
+		
+		
+		
+		dem = dem - 1
 		Session("dem") = dem
+		Session("giohang") = q
+		Session("tongtien") = tongtien
 		
 		Response.Redirect("HienThi.asp")		
 	%>

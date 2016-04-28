@@ -327,37 +327,35 @@ End If
 <div class="wrap"> 
     <div class="gocphaimanhinhTV">
 <%
-if Session("TKKH") = "" then
+if Session("name") = "" then
 	Response.write("<a rel=nofollow href=../login.asp?login=createnew class=colorlink2><span><ins>Đăng ký</ins></span></a>|<a rel=nofollow href=../login.asp class=colorlink2><span><ins>Đăng Nhập</ins></span></a>")
-	Response.write("<div style=margin-top:-20px class=cntr>")
 else
 	Response.write("Xin chào " & Session("name") & "," & "&nbsp;" & "<a href=../logout.asp class=colorlink2 <ins>Thoát<ins></a>")
-	Response.write("<div><p algin=right class=thongtincanhan><a href=../SuaTTCN.asp rel=nofollow class=colorlink><span><ins>Thông Tin Cá Nhân</ins></span></a></p></div>")
-	Response.write("<div style=margin-top:-45px class=cntr>")
+	
 end if
 %>
-    <!---------------------------
-                SEARCH
-    ---------------------------->
-		<div class="cntr-innr">
-              <form  action="../Search/Search.asp" method="post" id="form1" class="search" for="inpt_search">
-                    <input name="txtSearch" type="text" id="inpt_search" />
-                </form>
-                <p>Tìm kiếm</p>
-          </div>
-        </div>
-        <div>
-            <a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
-            <p> <% Response.Write(Session("dem")) %></p>
-        </div>
+	<div class="giohang">
+    	<a href="../HienThi.asp"><img width="50" height="50" src="../Images/giohang_index.png" /></a>
+        <p class="soluong"> <% Response.Write(Session("dem")) %></p>
+    </div>
 	</div>
 </div>
 
-<div class="pages-top">
-    <div class="logo">
-        <a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
+    <!---------------------------
+                SEARCH
+    ---------------------------->
+    <div class="cntr">
+        <div class="cntr-innr">
+          <label class="search" for="inpt_search">
+                <input id="inpt_search" type="text" />
+            </label>
+            <p>Sờ vào để tìm thứ bạn cần.</p>
+        </div>
     </div>
-             
+	<div class="pages-top">
+	        <div class="logo">
+				<a href="../index.asp"><img src="../images/logo.png" alt=""/></a>
+			 </div>
 		     <div class="h_menu4">
     <!---------------------------
                 MENU
@@ -479,7 +477,7 @@ While ((Repeat1__numRows <> 0) AND (NOT DESKTOP.EOF))
 %>
   <div class="oneItem">
     <p><img src="<%=(DESKTOP.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150">Sản phẩm: <%=(DESKTOP.Fields.Item("TenSP").Value)%></p>
-    <p>Giá: <%=(DESKTOP.Fields.Item("Gia").Value)%></p>
+    <p>Giá: <%=(DESKTOP.Fields.Item("Gia").Value)%><strong><em> <u>VND</u></em></strong></p>
     <p>Hiện còn <%=(DESKTOP.Fields.Item("SoLuong").Value)%> sản phẩm</p>
     <p>&nbsp;</p>
     <form name="form1" method="post" action="ctspDesktop.asp">
@@ -497,13 +495,8 @@ While ((Repeat1__numRows <> 0) AND (NOT DESKTOP.EOF))
   DESKTOP.MoveNext()
 Wend
 %>
-             <div style="margin-top:10px; margin-bottom:10px; float:left">
-              <p>&nbsp;<A HREF="<%=MM_moveFirst%>">&lt;&lt;Trang đầu </A><A HREF="<%=MM_movePrev%>">&lt;&lt;Trước </A>**** <A HREF="<%=MM_moveNext%>">Tiếp&gt;&gt;</A> <A HREF="<%=MM_moveLast%>">Trang cuối&gt;&gt;</A></p>
-              </div>
 
               </div>
-              
-  
  </div>
        </div>
                
@@ -569,13 +562,14 @@ Wend
 			</ul>
 		   </div>
 	   </div>
-		   <div class="clear"></div>	
-</div>
-		  </div>
-</div>
-	<!---------------------------
+		  <div class="clear"></div>
+    <div style="margin-left:300px;">
+              <p>&nbsp;<A HREF="<%=MM_moveFirst%>" class="colorlink3">&lt;&lt;Trang đầu</A>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<A HREF="<%=MM_movePrev%>" class="colorlink3">&lt;Trước </A>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<A HREF="<%=MM_moveNext%>" class="colorlink3">Tiếp&gt;</A>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<A HREF="<%=MM_moveLast%>" class="colorlink3">Trang cuối&gt;&gt;</A></p>
+    </div>
+</div>	
+<!---------------------------
                 BOTTOM
-    ---------------------------->
+---------------------------->
         <div class="footer">
 			<div class="wrap">
 				<div class="footer-grid footer-grid1">

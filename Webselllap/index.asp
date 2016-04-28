@@ -1,15 +1,13 @@
 ﻿<%@LANGUAGE="VBSCRIPT" CODEPAGE="65001"%>
 <!--#include file="Connections/Connection.asp" -->
 <%
-Sub Session_OnStart
-End Sub
 Dim SanPham
 Dim SanPham_cmd
 Dim SanPham_numRows
 
 Set SanPham_cmd = Server.CreateObject ("ADODB.Command")
 SanPham_cmd.ActiveConnection = MM_Connection_STRING
-SanPham_cmd.CommandText = "SELECT MaSP, TenSP, MaNSX, HinhAnh FROM dbo.SanPham ORDER BY MaSP DESC" 
+SanPham_cmd.CommandText = "SELECT MaSP, TenSP, MaNSX, MaLoai, HinhAnh, Gia FROM dbo.SanPham ORDER BY MaSP DESC" 
 SanPham_cmd.Prepared = true
 
 Set SanPham = SanPham_cmd.Execute
@@ -32,14 +30,8 @@ SanPham_numRows = SanPham_numRows + Repeat1__numRows
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
 <link href='http://fonts.googleapis.com/css?family=Lato:400,300,600,700,800' rel='stylesheet' type='text/css'>
-	<!--jquery lightbox-->
-<script type="text/javascript" src="js/jquery.lightbox.js"></script>
-<link rel="stylesheet" type="text/css" href="css/lightbox.css" media="screen" />
 
-        <!---------------------------
-                     CLOCK
-        ---------------------------->
-    <link href="css/style2.css" rel="stylesheet" />
+
                 <!-- JavaScript Includes -->
 <script src="js/jquery.min(v1.10.1).js"></script>
 <script src="js/moment.min.js"></script>
@@ -105,13 +97,35 @@ end if
                 <p>Tìm kiếm</p>
           </div>
         </div>
-        <div>
-            <a href="HienThi.asp"><img width="50" height="50" src="Images/giohang_index.png" /></a>
-            <p> <% Response.Write(Session("dem")) %></p>
-        </div>
 	</div>
 </div>
-
+            <!---------------------------
+                Giỏ hàng
+            ---------------------------->      
+        <link rel="stylesheet" type="text/css" href="css/giohang.css" media="all" />
+        <div id="wrapper">
+          <div class="cart-tab visible">		
+            <a href="HienThi.asp" title="Xem giỏ hàng của bạn" class="cart-link">
+              <span class="contents"><% if Session("dem")="" then Response.Write("0") else Response.Write(Session("dem"))%> sản phẩm</span>
+              <span class="amount"><% if Session("tongtien")="" then Response.Write("0 ₫") else Response.Write(left(right(FormatCurrency(Session("tongtien")),13),10)& " ₫")%></span>
+            </a>
+            <div class="cart">
+              <h2 class="text_giohang">Giỏ hàng</h2>
+              <div class="cart-items">
+                <ul>
+                  <li class="clearfix">
+                    <img src="anh.jpg" class="productimg">
+                    <h4>Dark Hoodie</h4>
+                    <span class="item-price">$11.00</span>
+                    <span class="quantity">Số lượng: </span>
+                  </li>
+                </ul>
+              </div><!-- @end .cart-items -->
+              <a href="<%if session("TKKH")="" then response.Write("ThongTinKHMoi.asp") else response.write("ThongTinKHDangNhap.asp") end if %>" class="checkout">Thanh toán →</a>
+            </div><!-- @end .cart -->
+          </div>
+        </div>
+          <!-- End Giỏ hàng -->
 <div class="pages-top">
     <div class="logo">
         <a href="index.asp"><img src="images/logo.png" alt=""/></a>
@@ -254,7 +268,8 @@ end if
 				<script type="text/javascript" src="js/nav.js"></script>
 			</div>
             <!--END MENU-->
- 
+  
+    </div> 
  			<div class="clear"></div>
 		</div>
         <!-- end header_main4 -->
@@ -310,7 +325,18 @@ While ((Repeat1__numRows <> 0) AND (NOT SanPham.EOF))
 %>
   <div class="col_1_of_4 span_1_of_4">
 	<p align="center">
-    	<img src="<%=(SanPham.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"/>
+    	<a href="<% 
+					x = SanPham.Fields.Item("MaLoai").Value
+					if x = 1 then
+						response.Write("ctspLaptop.asp?")
+					elseif x = 2 then response.Write("ctspDesktop.asp?")
+					elseif x = 3 then response.Write("ctspPhukien.asp?") 
+					else response.Write("ctspLinhkien.asp?")
+                    end if
+				%>
+					<%=(SanPham.Fields.Item("MaSP").Value)%>">
+                    <img src="<%=(SanPham.Fields.Item("HinhAnh").Value)%>" alt="" width="225" height="150"/>
+                    </a>
 	</p>                   
     <div class="desc">
       <h3><%=(SanPham.Fields.Item("TenSP").Value)%></h3>
@@ -482,18 +508,6 @@ Wend
    				   </script> 	
 			</div>
             <!--END NOTE-->
-        <!---------------------------
-                     CLOCK
-        ---------------------------->
-    <div id="clock" class="light">
-        <div class="display">
-            <div class="weekdays"></div>
-            <div class="ampm"></div>
-            <div class="alarm"></div>
-            <div class="digits"></div>
-        </div>
-    </div>
-           <!--END CLOCK-->
         
     <!---------------------------
                 BOTTOM
@@ -571,9 +585,9 @@ Wend
 			    </div>
 			    <div class="social">	
 				   <ul>	
-					  <li class="facebook"><a href="#"><span> </span></a></li>
-					  <li class="linkedin"><a href="#"><span> </span></a></li>
-					  <li class="twitter"><a href="#"><span> </span></a></li>		
+					  <li class="facebook"><a href="#facebook"><span> </span></a></li>
+					  <li class="linkedin"><a href="#linkedin"><span> </span></a></li>
+					  <li class="twitter"><a href="#twitter"><span> </span></a></li>		
 				   </ul>
 			    </div>
 			    <div class="clear"></div>
